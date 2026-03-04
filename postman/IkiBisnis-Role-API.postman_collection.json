@@ -22,9 +22,138 @@
       "value": "",
       "type": "string",
       "description": "UUID user — otomatis terisi setelah Create User dijalankan"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Bearer token — otomatis terisi setelah Login dijalankan"
     }
   ],
   "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.accessToken) {",
+                  "    pm.collectionVariables.set('access_token', res.data.accessToken);",
+                  "    console.log('✅ access_token tersimpan:', res.data.accessToken.slice(0,30) + '...');",
+                  "}",
+                  "",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('Message login berhasil', () => pm.expect(res.message).to.eql('Login berhasil'));",
+                  "pm.test('Data memiliki accessToken', () => pm.expect(res.data).to.have.property('accessToken'));",
+                  "pm.test('Data memiliki expiresIn', () => pm.expect(res.data).to.have.property('expiresIn'));",
+                  "pm.test('Data memiliki user', () => pm.expect(res.data).to.have.property('user'));",
+                  "pm.test('User memiliki id', () => pm.expect(res.data.user).to.have.property('id'));",
+                  "pm.test('User memiliki email', () => pm.expect(res.data.user).to.have.property('email'));",
+                  "pm.test('User isActive true', () => pm.expect(res.data.user.isActive).to.be.true);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"budi@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "Login dengan email dan password.\n\n**Response sukses (200):**\n```json\n{\n  \"success\": true,\n  \"message\": \"Login berhasil\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"expiresIn\": 86400,\n    \"user\": {\n      \"id\": \"uuid\",\n      \"fullName\": \"Budi Santoso\",\n      \"email\": \"budi@ikibisnis.com\",\n      \"roleId\": \"uuid\",\n      \"roleName\": \"Finance Manager\",\n      \"gender\": \"male\",\n      \"isActive\": true,\n      \"lastLoginAt\": \"2026-03-05T...\"\n    }\n  }\n}\n```\n\n**Error cases:**\n- `401` — Email atau password salah\n- `401` — Akun dinonaktifkan\n- `429` — Rate limit (5 request/menit)"
+          },
+          "response": [
+            {
+              "name": "200 — Login berhasil",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"budi@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login berhasil\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1dWlkLWhlcmUiLCJlbWFpbCI6ImJ1ZGlAaWtpYmlzbmlzLmNvbSIsInJvbGVJZCI6InV1aWQtcm9sZSIsInJvbGVOYW1lIjoiRmluYW5jZSBNYW5hZ2VyIiwiaWF0IjoxNzA5NjIyODAwLCJleHAiOjE3MDk3MDkyMDB9.signature\",\n    \"expiresIn\": 86400,\n    \"user\": {\n      \"id\": \"uuid-here\",\n      \"fullName\": \"Budi Santoso\",\n      \"email\": \"budi@ikibisnis.com\",\n      \"roleId\": \"uuid-role\",\n      \"roleName\": \"Finance Manager\",\n      \"gender\": \"male\",\n      \"isActive\": true,\n      \"lastLoginAt\": \"2026-03-05T08:00:00.000Z\"\n    }\n  }\n}"
+            },
+            {
+              "name": "401 — Email atau password salah",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"budi@ikibisnis.com\",\n  \"password\": \"WrongPassword!\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Email atau password salah.\",\n  \"statusCode\": 401\n}"
+            },
+            {
+              "name": "400 — Validasi gagal (password kurang 8 karakter)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"bukan-email\",\n  \"password\": \"123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"statusCode\": 400,\n  \"errors\": [\n    \"Format email tidak valid.\",\n    \"password must be longer than or equal to 8 characters\"\n  ]\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoint autentikasi. Jalankan **Login** terlebih dahulu agar `access_token` tersimpan otomatis untuk dipakai di request-request lain."
+    },
     {
       "name": "📁 Role",
       "item": [

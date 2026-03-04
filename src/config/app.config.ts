@@ -8,4 +8,6 @@ export const appConfig = registerAs('app', () => ({
   ).split(','),
   throttleTtl: parseInt(process.env.THROTTLE_TTL ?? '60000', 10),
   throttleLimit: parseInt(process.env.THROTTLE_LIMIT ?? '100', 10),
+  jwtSecret: process.env.JWT_SECRET ?? 'changeme_please_use_env',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '1d',
 }));

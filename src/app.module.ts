@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { databaseConfig } from './config/database.config';
 import { appConfig } from './config/app.config';
 
@@ -69,6 +70,7 @@ import { appConfig } from './config/app.config';
     // ── Feature Modules ────────────────────────────────────────────────────────
     RoleModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
