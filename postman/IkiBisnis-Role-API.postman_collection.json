@@ -1,0 +1,609 @@
+{
+  "info": {
+    "_postman_id": "ikibisnis-role-collection-v1",
+    "name": "IkiBisnis — Role Management API",
+    "description": "Koleksi lengkap endpoint Role Management API.\n\n**Base URL:** `{{base_url}}/api/v1/roles`\n\n**Cara pakai:**\n1. Set variable `base_url` → `http://localhost:3001`\n2. Jalankan **Create Role** dulu, lalu copy `id` dari response ke variable `role_id`\n3. Semua endpoint lain sudah otomatis menggunakan `{{role_id}}`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string",
+      "description": "Base URL aplikasi"
+    },
+    {
+      "key": "role_id",
+      "value": "",
+      "type": "string",
+      "description": "UUID role — otomatis terisi setelah Create Role dijalankan"
+    }
+  ],
+  "item": [
+    {
+      "name": "📁 Role",
+      "item": [
+        {
+          "name": "1. Create Role — Finance Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('role_id', res.data.id);",
+                  "    console.log('✅ role_id tersimpan:', res.data.id);",
+                  "}",
+                  "",
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Response success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('Data memiliki id', () => pm.expect(res.data).to.have.property('id'));",
+                  "pm.test('Nama sesuai', () => pm.expect(res.data.name).to.eql('Finance Manager'));",
+                  "pm.test('Badge color sesuai', () => pm.expect(res.data.badgeColor).to.eql('#4F46E5'));",
+                  "pm.test('Permissions tidak kosong', () => pm.expect(res.data.permissions).to.have.length.above(0));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Finance Manager\",\n  \"description\": \"Mengelola semua laporan keuangan perusahaan\",\n  \"badgeColor\": \"#4F46E5\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_harian\",     \"actions\": [\"read\", \"write\"] },\n    { \"feature\": \"laporan_neraca\",     \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",  \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",   \"actions\": [\"read\"] }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            },
+            "description": "Membuat role Finance Manager — akses ke semua laporan keuangan.\n\n**Features tersedia:**\n- `dashboard`\n- `user_management_roles`, `user_management_users`\n- `projects`\n- `penawaran`\n- `laporan_harian`, `laporan_neraca`, `laporan_laba_rugi`, `laporan_arus_kas`\n- `settings`\n\n**Actions tersedia:** `read`, `write`, `update`, `delete`"
+          },
+          "response": [
+            {
+              "name": "201 — Role berhasil dibuat",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Finance Manager\",\n  \"description\": \"Mengelola semua laporan keuangan perusahaan\",\n  \"badgeColor\": \"#4F46E5\",\n  \"permissions\": [\n    { \"feature\": \"laporan_harian\", \"actions\": [\"read\", \"write\"] }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "roles"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Role created successfully\",\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Finance Manager\",\n    \"description\": \"Mengelola semua laporan keuangan perusahaan\",\n    \"badgeColor\": \"#4F46E5\",\n    \"isActive\": true,\n    \"permissions\": [\n      { \"feature\": \"laporan_harian\", \"actions\": [\"read\", \"write\"] }\n    ],\n    \"createdAt\": \"2026-03-04T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-04T04:00:00.000Z\"\n  },\n  \"timestamp\": \"2026-03-04T04:00:00.000Z\",\n  \"path\": \"/api/v1/roles\"\n}"
+            },
+            {
+              "name": "409 — Nama role sudah ada",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Finance Manager\",\n  \"description\": \"Duplikat\",\n  \"badgeColor\": \"#FF0000\",\n  \"permissions\": [{\"feature\": \"dashboard\", \"actions\": [\"read\"]}]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "roles"]
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 409,\n  \"message\": \"A role with the name \\\"Finance Manager\\\" already exists.\",\n  \"timestamp\": \"2026-03-04T04:00:00.000Z\",\n  \"path\": \"/api/v1/roles\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "2. Create Role — Admin (semua akses)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Nama Admin', () => pm.expect(pm.response.json().data.name).to.eql('Admin'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Administrator dengan akses penuh ke seluruh fitur sistem\",\n  \"badgeColor\": \"#DC2626\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",              \"actions\": [\"read\"] },\n    { \"feature\": \"user_management_roles\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"user_management_users\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"projects\",               \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_neraca\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",      \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",       \"actions\": [\"read\"] },\n    { \"feature\": \"settings\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            },
+            "description": "Membuat role Admin dengan akses penuh ke seluruh fitur sistem"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Role — Project Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Project Manager\",\n  \"description\": \"Mengelola proyek dan penawaran kepada klien\",\n  \"badgeColor\": \"#059669\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",   \"actions\": [\"read\"] },\n    { \"feature\": \"projects\",    \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\", \"actions\": [\"read\", \"write\"] }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            },
+            "description": "Role untuk Project Manager — fokus ke projects dan penawaran"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Create Role — Viewer (read only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const perms = pm.response.json().data.permissions;",
+                  "pm.test('Semua actions hanya read', () => {",
+                  "    perms.forEach(p => pm.expect(p.actions).to.eql(['read']));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Viewer\",\n  \"description\": \"Hanya dapat melihat data tanpa bisa mengubah apapun\",\n  \"badgeColor\": \"#6B7280\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",         \"actions\": [\"read\"] },\n    { \"feature\": \"projects\",          \"actions\": [\"read\"] },\n    { \"feature\": \"penawaran\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_harian\",    \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_neraca\",    \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\", \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",  \"actions\": [\"read\"] }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            },
+            "description": "Role read-only — bisa melihat semua data tapi tidak bisa mengubah apapun"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get All Roles",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response success', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('Data adalah array', () => pm.expect(res.data.data).to.be.an('array'));",
+                  "pm.test('Ada pagination total', () => pm.expect(res.data).to.have.property('total'));",
+                  "pm.test('Ada pagination totalPages', () => pm.expect(res.data).to.have.property('totalPages'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"],
+              "query": [
+                { "key": "page",  "value": "1",  "description": "Halaman (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Jumlah per halaman (max: 100)" },
+                { "key": "search",   "value": "", "description": "Cari berdasarkan nama atau deskripsi", "disabled": true },
+                { "key": "isActive", "value": "true", "description": "Filter status aktif (true/false)", "disabled": true }
+              ]
+            },
+            "description": "Mendapatkan semua role dengan pagination.\n\n**Query params:**\n- `page` — halaman (default: 1)\n- `limit` — item per halaman (default: 10, max: 100)\n- `search` — cari di nama atau deskripsi\n- `isActive` — filter `true` / `false`"
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get All Roles — Filter Active",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Semua role isActive = true', () => {",
+                  "    res.data.data.forEach(r => pm.expect(r.isActive).to.be.true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles?isActive=true&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"],
+              "query": [
+                { "key": "isActive", "value": "true" },
+                { "key": "page",     "value": "1" },
+                { "key": "limit",    "value": "10" }
+              ]
+            },
+            "description": "Filter hanya role yang aktif"
+          },
+          "response": []
+        },
+        {
+          "name": "6. Get All Roles — Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles?search=finance&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"],
+              "query": [
+                { "key": "search", "value": "finance", "description": "Cari role yang mengandung kata 'finance'" },
+                { "key": "page",   "value": "1" },
+                { "key": "limit",  "value": "10" }
+              ]
+            },
+            "description": "Mencari role berdasarkan keyword di nama atau deskripsi (case-insensitive)"
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get Role by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('ID sesuai', () => pm.expect(res.data.id).to.eql(pm.collectionVariables.get('role_id')));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}"]
+            },
+            "description": "Mendapatkan detail satu role berdasarkan UUID-nya.\n\nPastikan `role_id` sudah terisi (otomatis dari request Create Role)."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Update Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Nama berubah', () => pm.expect(res.data.name).to.eql('Finance Manager (Updated)'));",
+                  "pm.test('Badge color berubah', () => pm.expect(res.data.badgeColor).to.eql('#7C3AED'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Finance Manager (Updated)\",\n  \"description\": \"Mengelola laporan keuangan — diperbarui\",\n  \"badgeColor\": \"#7C3AED\",\n  \"permissions\": [\n    {\n      \"feature\": \"finance_report\",\n      \"actions\": [\"read\", \"write\", \"update\"]\n    },\n    {\n      \"feature\": \"finance_transaction\",\n      \"actions\": [\"read\"]\n    },\n    {\n      \"feature\": \"dashboard\",\n      \"actions\": [\"read\"]\n    }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}"]
+            },
+            "description": "Update penuh role — nama, deskripsi, badge color, dan permissions sekaligus.\n\nSemua field bersifat opsional (partial update)."
+          },
+          "response": []
+        },
+        {
+          "name": "9. Update Role — Partial (badge color saja)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Badge color berubah ke merah', () => pm.expect(pm.response.json().data.badgeColor).to.eql('#EF4444'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"badgeColor\": \"#EF4444\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}"]
+            },
+            "description": "Update partial — hanya ubah badge color tanpa mengubah field lain"
+          },
+          "response": []
+        },
+        {
+          "name": "10. Toggle Status (Active ↔ Inactive)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response memiliki isActive', () => pm.expect(res.data).to.have.property('isActive'));",
+                  "console.log('isActive sekarang:', res.data.isActive);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/{{role_id}}/toggle-status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}", "toggle-status"]
+            },
+            "description": "Toggle status role antara aktif dan non-aktif.\n\nJika saat ini `isActive: true` → menjadi `false`, dan sebaliknya.\n\nPanggil 2x untuk kembali ke status semula."
+          },
+          "response": []
+        },
+        {
+          "name": "11. Delete Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Ada message sukses', () => pm.expect(res.data).to.have.property('message'));",
+                  "console.log('Delete message:', res.data.message);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}"]
+            },
+            "description": "Hapus permanen role dari database.\n\n⚠️ Tindakan ini tidak bisa dibatalkan."
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Get Role — ID Tidak Ada (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                  "pm.test('success = false', () => pm.expect(pm.response.json().success).to.be.false);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/00000000-0000-0000-0000-000000000000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "00000000-0000-0000-0000-000000000000"]
+            },
+            "description": "Test error handling — role dengan UUID ini tidak ada di database"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Create Role — Validation Error (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 422 atau 400', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "});",
+                  "pm.test('success = false', () => pm.expect(pm.response.json().success).to.be.false);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"description\": \"\",\n  \"badgeColor\": \"\",\n  \"permissions\": []\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            },
+            "description": "Test validasi — semua field kosong dan permissions array kosong harus ditolak"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Create Role — Feature Tidak Valid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Invalid Role\",\n  \"description\": \"Role dengan feature tidak valid\",\n  \"badgeColor\": \"#FF0000\",\n  \"permissions\": [\n    {\n      \"feature\": \"finance_report\",\n      \"actions\": [\"read\"]\n    }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            },
+            "description": "Test validasi — feature `finance_report` sudah tidak ada di enum SystemFeature (sudah diganti dengan `laporan_harian` dll)"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Get Role — UUID Format Salah (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('success = false', () => pm.expect(pm.response.json().success).to.be.false);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles/bukan-uuid-valid",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "bukan-uuid-valid"]
+            },
+            "description": "Test ParseUUIDPipe — ID bukan format UUID yang valid"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📋 Reference — Semua Feature & Action",
+      "item": [
+        {
+          "name": "Info: Daftar SystemFeature",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"],
+              "query": [
+                { "key": "page",  "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "## Daftar SystemFeature yang tersedia\n\n| Feature Key | Menu / Halaman |\n|---|---|\n| `dashboard` | Dashboard |\n| `user_management_roles` | User Management → Roles |\n| `user_management_users` | User Management → Users |\n| `projects` | Projects |\n| `penawaran` | Penawaran (Quotation) |\n| `laporan_harian` | Laporan → Harian |\n| `laporan_neraca` | Laporan → Neraca |\n| `laporan_laba_rugi` | Laporan → Laba Rugi |\n| `laporan_arus_kas` | Laporan → Arus Kas |\n| `settings` | Settings |\n\n## Daftar FeatureAction\n\n| Action | Keterangan |\n|---|---|\n| `read` | Melihat / membaca data |\n| `write` | Membuat data baru |\n| `update` | Mengubah data yang ada |\n| `delete` | Menghapus data |"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
