@@ -11,7 +11,10 @@ import { UserRepository } from './infrastructure/repositories/user.repository';
 
 // Application — Use Cases
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
-import { UpdateUserUseCase, ChangePasswordUseCase } from './application/use-cases/update-user.use-case';
+import {
+  UpdateUserUseCase,
+  ChangePasswordUseCase,
+} from './application/use-cases/update-user.use-case';
 import { GetUserByIdUseCase } from './application/use-cases/get-user-by-id.use-case';
 import { GetAllUsersUseCase } from './application/use-cases/get-all-users.use-case';
 import { DeleteUserUseCase } from './application/use-cases/delete-user.use-case';
@@ -22,6 +25,10 @@ import { UserController } from './presentation/user.controller';
 
 // Common
 import { ResponseInterceptor } from '../../common/interceptors/response.interceptor';
+import { PermissionGuard } from '../../common/guards/permission.guard';
+
+// Role (for PermissionGuard — needs IRoleRepository)
+import { RoleModule } from '../role/role.module';
 
 const USE_CASES = [
   CreateUserUseCase,
@@ -34,12 +41,13 @@ const USE_CASES = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserOrmEntity])],
+  imports: [TypeOrmModule.forFeature([UserOrmEntity]), RoleModule],
   controllers: [UserController],
   providers: [
     { provide: IUserRepository, useClass: UserRepository },
     Reflector,
     ResponseInterceptor,
+    PermissionGuard,
     ...USE_CASES,
   ],
   exports: [IUserRepository],

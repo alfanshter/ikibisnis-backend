@@ -8,18 +8,18 @@ export class User {
   readonly id: string;
   fullName: string;
   email: string;
-  passwordHash: string;        // bcrypt hash — never store plaintext
+  passwordHash: string; // bcrypt hash — never store plaintext
   phone: string;
   address: string;
   gender: Gender;
-  roleId: string;              // FK → Role.id
-  roleName: string | null;     // denormalized — populated when relation is loaded
+  roleId: string; // FK → Role.id
+  roleName: string | null; // denormalized — populated when relation is loaded
 
   // Optional fields
   birthPlace: string | null;
   birthDate: Date | null;
-  nik: string | null;          // Nomor Induk Kependudukan (16 digits)
-  npwp: string | null;         // Nomor Pokok Wajib Pajak (15 digits)
+  nik: string | null; // Nomor Induk Kependudukan (16 digits)
+  npwp: string | null; // Nomor Pokok Wajib Pajak (15 digits)
 
   isActive: boolean;
   lastLoginAt: Date | null;

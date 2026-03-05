@@ -18,12 +18,18 @@ export class UserRepository implements IUserRepository {
   ) {}
 
   async findById(id: string): Promise<User | null> {
-    const orm = await this.repo.findOne({ where: { id }, relations: { role: true } });
+    const orm = await this.repo.findOne({
+      where: { id },
+      relations: { role: true },
+    });
     return orm ? UserMapper.toDomain(orm) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const orm = await this.repo.findOne({ where: { email }, relations: { role: true } });
+    const orm = await this.repo.findOne({
+      where: { email },
+      relations: { role: true },
+    });
     return orm ? UserMapper.toDomain(orm) : null;
   }
 

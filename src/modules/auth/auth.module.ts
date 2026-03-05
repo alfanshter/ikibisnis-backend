@@ -7,6 +7,9 @@ import { Reflector } from '@nestjs/core';
 // User module (provides IUserRepository)
 import { UserModule } from '../user/user.module';
 
+// Role module (provides IRoleRepository)
+import { RoleModule } from '../role/role.module';
+
 // Application
 import { LoginUseCase } from './application/use-cases/login.use-case';
 
@@ -22,6 +25,7 @@ import { ResponseInterceptor } from '../../common/interceptors/response.intercep
 @Module({
   imports: [
     UserModule,
+    RoleModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

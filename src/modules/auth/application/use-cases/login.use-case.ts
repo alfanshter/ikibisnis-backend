@@ -2,8 +2,13 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { IUserRepository } from '../../../user/domain/repositories/user.repository.interface';
+import { IRoleRepository } from '../../../role/domain/repositories/role.repository.interface';
 import { LoginDto } from '../dtos/login.dto';
-import { AuthUserDto, LoginResponseDto } from '../dtos/login-response.dto';
+import {
+  AuthUserDto,
+  LoginResponseDto,
+  PermissionDto,
+} from '../dtos/login-response.dto';
 
 interface JwtDecoded {
   sub: string;
@@ -18,6 +23,7 @@ interface JwtDecoded {
 export class LoginUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
+    private readonly roleRepository: IRoleRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -46,6 +52,9 @@ export class LoginUseCase {
     user.recordLogin();
     await this.userRepository.update(user);
 
+    // Load role untuk mendapatkan permissions
+    const role = await this.roleRepository.findById(user.roleId);
+
     const payload: JwtDecoded = {
       sub: user.id,
       email: user.email,
@@ -58,6 +67,12 @@ export class LoginUseCase {
     const expiresIn =
       decoded?.exp && decoded?.iat ? decoded.exp - decoded.iat : 3600;
 
+    // Map permissions domain → DTO untuk frontend
+    const permissions: PermissionDto[] = (role?.permissions ?? []).map((p) => ({
+      feature: p.feature,
+      actions: Array.from(p.actions),
+    }));
+
     const userDto = new AuthUserDto();
     userDto.id = user.id;
     userDto.fullName = user.fullName;
@@ -67,6 +82,7 @@ export class LoginUseCase {
     userDto.gender = user.gender;
     userDto.isActive = user.isActive;
     userDto.lastLoginAt = user.lastLoginAt;
+    userDto.permissions = permissions;
 
     const response = new LoginResponseDto();
     response.accessToken = accessToken;

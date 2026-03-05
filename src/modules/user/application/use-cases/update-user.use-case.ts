@@ -20,7 +20,10 @@ export class UpdateUserUseCase {
     }
 
     if (dto.email && dto.email !== user.email) {
-      const emailExists = await this.userRepository.existsByEmail(dto.email, id);
+      const emailExists = await this.userRepository.existsByEmail(
+        dto.email,
+        id,
+      );
       if (emailExists) {
         throw new ConflictException(`Email "${dto.email}" sudah digunakan.`);
       }
@@ -64,23 +67,33 @@ export class UpdateUserUseCase {
 export class ChangePasswordUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  async execute(id: string, dto: ChangePasswordDto): Promise<{ message: string }> {
+  async execute(
+    id: string,
+    dto: ChangePasswordDto,
+  ): Promise<{ message: string }> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`User dengan id "${id}" tidak ditemukan.`);
     }
 
     if (!dto.newPassword || !dto.confirmPassword) {
-      throw new BadRequestException('Password baru dan konfirmasi password wajib diisi.');
+      throw new BadRequestException(
+        'Password baru dan konfirmasi password wajib diisi.',
+      );
     }
 
     if (dto.newPassword !== dto.confirmPassword) {
-      throw new BadRequestException('Password baru dan konfirmasi password tidak cocok.');
+      throw new BadRequestException(
+        'Password baru dan konfirmasi password tidak cocok.',
+      );
     }
 
     // Verify current password if provided
     if (dto.currentPassword) {
-      const isMatch = await bcrypt.compare(dto.currentPassword, user.passwordHash);
+      const isMatch = await bcrypt.compare(
+        dto.currentPassword,
+        user.passwordHash,
+      );
       if (!isMatch) {
         throw new BadRequestException('Password saat ini tidak sesuai.');
       }

@@ -22,6 +22,7 @@ import { RoleController } from './presentation/role.controller';
 
 // Common
 import { ResponseInterceptor } from '../../common/interceptors/response.interceptor';
+import { PermissionGuard } from '../../common/guards/permission.guard';
 
 const USE_CASES = [
   CreateRoleUseCase,
@@ -41,9 +42,10 @@ const USE_CASES = [
       provide: IRoleRepository,
       useClass: RoleRepository,
     },
-    // Make Reflector available for ResponseInterceptor
+    // Make Reflector available for guards and interceptors
     Reflector,
     ResponseInterceptor,
+    PermissionGuard,
     ...USE_CASES,
   ],
   exports: [IRoleRepository],

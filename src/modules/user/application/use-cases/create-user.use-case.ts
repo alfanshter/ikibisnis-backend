@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
@@ -18,7 +17,9 @@ export class CreateUserUseCase {
   async execute(dto: CreateUserDto): Promise<UserResponseDto> {
     // Validate confirm password
     if (dto.password !== dto.confirmPassword) {
-      throw new BadRequestException('Password dan konfirmasi password tidak cocok.');
+      throw new BadRequestException(
+        'Password dan konfirmasi password tidak cocok.',
+      );
     }
 
     // Check email uniqueness
