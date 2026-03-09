@@ -12,9 +12,11 @@ import { RoleModule } from '../role/role.module';
 
 // Application
 import { LoginUseCase } from './application/use-cases/login.use-case';
+import { LogoutUseCase } from './application/use-cases/logout.use-case';
 
 // Infrastructure
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
+import { TokenBlacklistService } from './infrastructure/services/token-blacklist.service';
 
 // Presentation
 import { AuthController } from './presentation/auth.controller';
@@ -39,7 +41,14 @@ import { ResponseInterceptor } from '../../common/interceptors/response.intercep
     }),
   ],
   controllers: [AuthController],
-  providers: [LoginUseCase, JwtStrategy, Reflector, ResponseInterceptor],
+  providers: [
+    LoginUseCase,
+    LogoutUseCase,
+    TokenBlacklistService,
+    JwtStrategy,
+    Reflector,
+    ResponseInterceptor,
+  ],
   exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}

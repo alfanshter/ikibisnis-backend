@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ProjectModule } from './modules/project/project.module';
 import { databaseConfig } from './config/database.config';
 import { appConfig } from './config/app.config';
 
@@ -71,6 +72,7 @@ import { appConfig } from './config/app.config';
     RoleModule,
     UserModule,
     AuthModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],

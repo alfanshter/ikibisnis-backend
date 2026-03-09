@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "ikibisnis-collection-v3",
-    "name": "IkiBisnis — Role & User Management API",
-    "description": "Koleksi lengkap Role & User Management API dengan JWT Auth.\n\n**Base URL:** `{{base_url}}/api/v1`\n\n**Cara pakai:**\n1. Set variable `base_url` → `http://localhost:3001`\n2. Jalankan **🔐 Auth → Login** → `access_token` otomatis tersimpan\n3. Jalankan **Create Role** → `role_id` otomatis tersimpan\n4. Jalankan **Create User** → `user_id` otomatis tersimpan\n\n**Semua endpoint Role & User membutuhkan Bearer Token dari Login.**",
+    "name": "IkiBisnis — Role, User & Project API",
+    "description": "Koleksi lengkap Role, User Management & Projects API dengan JWT Auth.\n\n**Base URL:** `{{base_url}}/api/v1`\n\n**Cara pakai:**\n1. Set variable `base_url` → `http://localhost:3001`\n2. Jalankan **🔐 Auth → Login** → `access_token` otomatis tersimpan\n3. Jalankan **Create Role** → `role_id` otomatis tersimpan\n4. Jalankan **Create User** → `user_id` otomatis tersimpan\n5. Jalankan **Create Project** → `project_id` otomatis tersimpan\n\n**Semua endpoint membutuhkan Bearer Token dari Login.**",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -28,6 +28,12 @@
       "value": "",
       "type": "string",
       "description": "UUID user — otomatis terisi setelah Create User dijalankan"
+    },
+    {
+      "key": "project_id",
+      "value": "",
+      "type": "string",
+      "description": "UUID project — otomatis terisi setelah Create Project dijalankan"
     }
   ],
   "auth": {
@@ -83,18 +89,36 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
             },
             "description": "Login dengan email dan password. Token JWT akan otomatis tersimpan ke variable `access_token`.\n\n**Error cases:**\n- `401` — Email atau password salah\n- `401` — Akun dinonaktifkan\n- `429` — Rate limit (5 request/menit)"
           },
@@ -103,43 +127,244 @@
               "name": "200 — Login berhasil",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}" },
-                "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api", "v1", "auth", "login"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
               },
               "status": "OK",
               "code": 200,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Login berhasil\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"expiresIn\": 86400,\n    \"user\": {\n      \"id\": \"uuid-here\",\n      \"fullName\": \"Budi Santoso\",\n      \"email\": \"budi.santoso@ikibisnis.com\",\n      \"roleId\": \"uuid-role\",\n      \"roleName\": \"Admin\",\n      \"gender\": \"male\",\n      \"isActive\": true,\n      \"lastLoginAt\": \"2026-03-06T08:00:00.000Z\",\n      \"permissions\": [\n        { \"feature\": \"dashboard\",              \"actions\": [\"read\"] },\n        { \"feature\": \"user_management_roles\",  \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"user_management_users\",  \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"projects\",               \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"penawaran\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"laporan_harian\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"laporan_neraca\",         \"actions\": [\"read\"] },\n        { \"feature\": \"laporan_laba_rugi\",      \"actions\": [\"read\"] },\n        { \"feature\": \"laporan_arus_kas\",       \"actions\": [\"read\"] },\n        { \"feature\": \"settings\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n      ]\n    }\n  }\n}"
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Login berhasil\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"expiresIn\": 86400,\n    \"user\": {\n      \"id\": \"uuid-here\",\n      \"fullName\": \"Budi Santoso\",\n      \"email\": \"budi.santoso@ikibisnis.com\",\n      \"roleId\": \"uuid-role\",\n      \"roleName\": \"Admin\",\n      \"gender\": \"male\",\n      \"isActive\": true,\n      \"lastLoginAt\": \"2026-03-06T08:00:00.000Z\",\n      \"permissions\": [\n        { \"feature\": \"dashboard\",              \"actions\": [\"read\"] },\n        { \"feature\": \"user_management_roles\",  \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"user_management_users\",  \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"projects\",               \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"penawaran\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"hutang_piutang\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"laporan_harian\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n        { \"feature\": \"laporan_neraca\",         \"actions\": [\"read\"] },\n        { \"feature\": \"laporan_laba_rugi\",      \"actions\": [\"read\"] },\n        { \"feature\": \"laporan_arus_kas\",       \"actions\": [\"read\"] },\n        { \"feature\": \"settings\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n      ]\n    }\n  }\n}"
             },
             {
               "name": "401 — Email atau password salah",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"password\": \"WrongPass!\"\n}" },
-                "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api", "v1", "auth", "login"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"password\": \"WrongPass!\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
               },
               "status": "Unauthorized",
               "code": 401,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 401,\n  \"message\": \"Email atau password salah.\"\n}"
             },
             {
               "name": "401 — Akun tidak aktif",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"email\": \"inactive@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}" },
-                "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api", "v1", "auth", "login"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"inactive@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
               },
               "status": "Unauthorized",
               "code": 401,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 401,\n  \"message\": \"Akun Anda telah dinonaktifkan. Hubungi administrator.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('Message logout berhasil', () => pm.expect(res.message).to.eql('Logout berhasil'));",
+                  "",
+                  "// Hapus access_token HANYA jika logout berhasil (status 200)",
+                  "if (pm.response.code === 200 && res.success) {",
+                  "    pm.collectionVariables.set('access_token', '');",
+                  "    console.log('✅ Logout berhasil. access_token dihapus dari collection.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Logout user yang sedang aktif. Token JWT akan dimasukkan ke **blacklist** hingga token expired secara alami.\n\nSetelah logout:\n- Token lama **tidak bisa digunakan lagi** meskipun belum expired\n- `access_token` di collection variable akan dikosongkan otomatis\n- Perlu login ulang untuk mendapatkan token baru\n\n**Requires:** `Authorization: Bearer {{access_token}}`\n\n⚠️ **Jika dapat 404:** Pastikan server sudah di-restart setelah update kode terakhir (`pnpm run start:dev`)"
+          },
+          "response": [
+            {
+              "name": "200 — Logout berhasil",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Logout berhasil\",\n  \"data\": {\n    \"message\": \"Logout berhasil. Token telah dicabut.\"\n  }\n}"
+            },
+            {
+              "name": "401 — Token tidak ada / expired",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "401 — Token sudah di-logout sebelumnya",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 401,\n  \"message\": \"Sesi telah berakhir. Silakan login kembali.\"\n}"
             }
           ]
         }
@@ -173,16 +398,31 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Administrator dengan akses penuh ke seluruh fitur sistem\",\n  \"badgeColor\": \"#DC2626\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",                \"actions\": [\"read\"] },\n    { \"feature\": \"user_management_roles\",    \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"user_management_users\",    \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"projects\",                 \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",                \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\",           \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_neraca\",           \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",        \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",         \"actions\": [\"read\"] },\n    { \"feature\": \"settings\",                 \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Administrator dengan akses penuh ke seluruh fitur sistem\",\n  \"badgeColor\": \"#DC2626\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",                \"actions\": [\"read\"] },\n    { \"feature\": \"user_management_roles\",    \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"user_management_users\",    \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"projects\",                 \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",                \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"hutang_piutang\",           \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\",           \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_neraca\",           \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",        \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",         \"actions\": [\"read\"] },\n    { \"feature\": \"settings\",                 \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/roles",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
             },
             "description": "Membuat role Admin dengan akses penuh.\n\n**Permission dibutuhkan:** `user_management_roles` → `write`\n\n**Response 403** jika role Anda tidak punya akses write ke user_management_roles."
           },
@@ -191,14 +431,37 @@
               "name": "201 — Role berhasil dibuat",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Admin\",\n  \"badgeColor\": \"#DC2626\",\n  \"permissions\": [{\"feature\": \"user_management_roles\", \"actions\": [\"read\",\"write\",\"update\",\"delete\"]}]\n}" },
-                "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Admin\",\n  \"badgeColor\": \"#DC2626\",\n  \"permissions\": [{\"feature\": \"user_management_roles\", \"actions\": [\"read\",\"write\",\"update\",\"delete\"]}]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "roles"
+                  ]
+                }
               },
               "status": "Created",
               "code": 201,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Role created successfully\",\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Admin\",\n    \"description\": \"Administrator dengan akses penuh\",\n    \"badgeColor\": \"#DC2626\",\n    \"isActive\": true,\n    \"permissions\": [{\"feature\": \"user_management_roles\", \"actions\": [\"read\",\"write\",\"update\",\"delete\"]}],\n    \"createdAt\": \"2026-03-06T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-06T04:00:00.000Z\"\n  }\n}"
             },
             {
@@ -206,39 +469,97 @@
               "originalRequest": {
                 "method": "POST",
                 "header": [],
-                "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] }
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "roles"
+                  ]
+                }
               },
               "status": "Unauthorized",
               "code": 401,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized\"\n}"
             },
             {
               "name": "403 — Permission tidak cukup",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "roles"
+                  ]
+                }
               },
               "status": "Forbidden",
               "code": 403,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 403,\n  \"message\": \"Akses ditolak. Role \\\"Viewer\\\" tidak memiliki izin \\\"write\\\" pada fitur \\\"user_management_roles\\\".\"\n}"
             },
             {
               "name": "409 — Nama role sudah ada",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Duplikat\",\n  \"badgeColor\": \"#FF0000\",\n  \"permissions\": [{\"feature\": \"dashboard\", \"actions\": [\"read\"]}]\n}" },
-                "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Duplikat\",\n  \"badgeColor\": \"#FF0000\",\n  \"permissions\": [{\"feature\": \"dashboard\", \"actions\": [\"read\"]}]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "roles"
+                  ]
+                }
               },
               "status": "Conflict",
               "code": 409,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 409,\n  \"message\": \"A role with the name \\\"Admin\\\" already exists.\"\n}"
             }
           ]
@@ -259,13 +580,32 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Finance Manager\",\n  \"description\": \"Mengelola semua laporan keuangan perusahaan\",\n  \"badgeColor\": \"#4F46E5\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_harian\",     \"actions\": [\"read\", \"write\"] },\n    { \"feature\": \"laporan_neraca\",     \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",  \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",   \"actions\": [\"read\"] }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] },
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
+            },
             "description": "Role Finance Manager — hanya akses laporan keuangan.\n\n**Permission dibutuhkan:** `user_management_roles` → `write`"
           },
           "response": []
@@ -276,20 +616,41 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"],
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                ],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Project Manager\",\n  \"description\": \"Mengelola proyek dan penawaran kepada klien\",\n  \"badgeColor\": \"#059669\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",      \"actions\": [\"read\"] },\n    { \"feature\": \"projects\",       \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",      \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\", \"actions\": [\"read\", \"write\"] }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] }
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
+            }
           },
           "response": []
         },
@@ -312,13 +673,32 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Viewer\",\n  \"description\": \"Hanya dapat melihat data tanpa bisa mengubah apapun\",\n  \"badgeColor\": \"#6B7280\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",         \"actions\": [\"read\"] },\n    { \"feature\": \"projects\",          \"actions\": [\"read\"] },\n    { \"feature\": \"penawaran\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_harian\",    \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_neraca\",    \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\", \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",  \"actions\": [\"read\"] }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/roles", "host": ["{{base_url}}"], "path": ["api", "v1", "roles"] }
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
+            }
           },
           "response": []
         },
@@ -343,13 +723,33 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" },
-                { "key": "search", "value": "", "disabled": true },
-                { "key": "isActive", "value": "true", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "disabled": true
+                }
               ]
             },
             "description": "**Permission dibutuhkan:** `user_management_roles` → `read`"
@@ -376,8 +776,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles", "{{role_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{role_id}}"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_roles` → `read`"
           },
@@ -399,16 +806,32 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Admin (Updated)\",\n  \"description\": \"Administrator dengan akses penuh — diperbarui\",\n  \"badgeColor\": \"#7C3AED\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",              \"actions\": [\"read\"] },\n    { \"feature\": \"user_management_roles\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"user_management_users\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"projects\",               \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_neraca\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",      \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",       \"actions\": [\"read\"] },\n    { \"feature\": \"settings\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"name\": \"Admin (Updated)\",\n  \"description\": \"Administrator dengan akses penuh — diperbarui\",\n  \"badgeColor\": \"#7C3AED\",\n  \"permissions\": [\n    { \"feature\": \"dashboard\",              \"actions\": [\"read\"] },\n    { \"feature\": \"user_management_roles\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"user_management_users\",   \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"projects\",               \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"penawaran\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"hutang_piutang\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_harian\",         \"actions\": [\"read\", \"write\", \"update\", \"delete\"] },\n    { \"feature\": \"laporan_neraca\",         \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_laba_rugi\",      \"actions\": [\"read\"] },\n    { \"feature\": \"laporan_arus_kas\",       \"actions\": [\"read\"] },\n    { \"feature\": \"settings\",              \"actions\": [\"read\", \"write\", \"update\", \"delete\"] }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles", "{{role_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{role_id}}"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_roles` → `update`"
           },
@@ -417,13 +840,34 @@
               "name": "403 — Permission tidak cukup (contoh Viewer)",
               "originalRequest": {
                 "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "url": { "raw": "{{base_url}}/api/v1/roles/{{role_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "roles", "{{role_id}}"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "roles",
+                    "{{role_id}}"
+                  ]
+                }
               },
               "status": "Forbidden",
               "code": 403,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 403,\n  \"message\": \"Akses ditolak. Role \\\"Viewer\\\" tidak memiliki izin \\\"update\\\" pada fitur \\\"user_management_roles\\\".\"\n}"
             }
           ]
@@ -448,8 +892,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles/{{role_id}}/toggle-status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles", "{{role_id}}", "toggle-status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{role_id}}",
+                "toggle-status"
+              ]
             },
             "description": "Toggle status role aktif/nonaktif.\n\n**Permission dibutuhkan:** `user_management_roles` → `update`\n\n⚠️ Jika role dinonaktifkan, semua user dengan role tersebut tidak bisa mengakses endpoint manapun (403 dari PermissionGuard)."
           },
@@ -474,8 +926,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles", "{{role_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{role_id}}"
+              ]
             },
             "description": "Hapus permanen role.\n\n**Permission dibutuhkan:** `user_management_roles` → `delete`\n\n⚠️ Tidak bisa dihapus jika masih ada user yang menggunakan role ini."
           },
@@ -487,19 +946,29 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"],
+                "exec": [
+                  "pm.test('Status 401', () => pm.response.to.have.status(401));"
+                ],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
             },
             "description": "Test — akses tanpa Authorization header harus ditolak dengan 401"
           },
@@ -511,7 +980,9 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"],
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ],
                 "type": "text/javascript"
               }
             }
@@ -521,8 +992,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles/{{role_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles", "{{role_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{role_id}}"
+              ]
             },
             "description": "Test — login sebagai user dengan role yang tidak punya permission `delete` pada `user_management_roles`. Ganti access_token dengan token user Viewer/Finance Manager untuk test ini."
           },
@@ -534,7 +1012,9 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 400 atau 404', () => pm.expect(pm.response.code).to.be.oneOf([400, 404]));"],
+                "exec": [
+                  "pm.test('Status 400 atau 404', () => pm.expect(pm.response.code).to.be.oneOf([400, 404]));"
+                ],
                 "type": "text/javascript"
               }
             }
@@ -544,8 +1024,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles/bukan-uuid-valid",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles", "bukan-uuid-valid"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "bukan-uuid-valid"
+              ]
             }
           },
           "response": []
@@ -579,16 +1066,31 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Budi Santoso\",\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"phone\": \"08123456789\",\n  \"address\": \"Jl. Merdeka No. 10, Jakarta Pusat\",\n  \"gender\": \"male\",\n  \"birthPlace\": \"Bandung\",\n  \"birthDate\": \"1995-07-17\",\n  \"nik\": \"3273012345678901\",\n  \"npwp\": \"123456789012345\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
             },
             "description": "Buat user baru.\n\n**Permission dibutuhkan:** `user_management_users` → `write`\n\n**Field wajib:** fullName, email, roleId, password, confirmPassword, phone, address, gender\n\n**Field opsional:** birthPlace, birthDate, nik (16 digit), npwp (15 digit)"
           },
@@ -597,27 +1099,70 @@
               "name": "201 — User berhasil dibuat",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Budi Santoso\",\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"phone\": \"08123456789\",\n  \"address\": \"Jl. Merdeka No. 10\",\n  \"gender\": \"male\"\n}" },
-                "url": { "raw": "{{base_url}}/api/v1/users", "host": ["{{base_url}}"], "path": ["api", "v1", "users"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"Budi Santoso\",\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"phone\": \"08123456789\",\n  \"address\": \"Jl. Merdeka No. 10\",\n  \"gender\": \"male\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "users"
+                  ]
+                }
               },
               "status": "Created",
               "code": 201,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"User berhasil dibuat\",\n  \"data\": {\n    \"id\": \"uuid-user\",\n    \"fullName\": \"Budi Santoso\",\n    \"email\": \"budi.santoso@ikibisnis.com\",\n    \"roleId\": \"uuid-role\",\n    \"roleName\": \"Admin\",\n    \"gender\": \"male\",\n    \"isActive\": true,\n    \"lastLoginAt\": null,\n    \"createdAt\": \"2026-03-06T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-06T04:00:00.000Z\"\n  }\n}"
             },
             {
               "name": "403 — Permission tidak cukup",
               "originalRequest": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "url": { "raw": "{{base_url}}/api/v1/users", "host": ["{{base_url}}"], "path": ["api", "v1", "users"] }
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "users"
+                  ]
+                }
               },
               "status": "Forbidden",
               "code": 403,
               "_postman_previewlanguage": "json",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 403,\n  \"message\": \"Akses ditolak. Role \\\"Finance Manager\\\" tidak memiliki akses ke fitur \\\"user_management_users\\\".\"\n}"
             }
           ]
@@ -638,13 +1183,32 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Siti Rahayu\",\n  \"email\": \"siti.rahayu@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"phone\": \"08987654321\",\n  \"address\": \"Jl. Sudirman No. 5, Surabaya\",\n  \"gender\": \"female\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/users", "host": ["{{base_url}}"], "path": ["api", "v1", "users"] }
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
           },
           "response": []
         },
@@ -671,15 +1235,43 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/users?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" },
-                { "key": "search", "value": "", "disabled": true },
-                { "key": "isActive", "value": "true", "disabled": true },
-                { "key": "gender", "value": "male", "disabled": true },
-                { "key": "roleId", "value": "{{role_id}}", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "male",
+                  "disabled": true
+                },
+                {
+                  "key": "roleId",
+                  "value": "{{role_id}}",
+                  "disabled": true
+                }
               ]
             },
             "description": "**Permission dibutuhkan:** `user_management_users` → `read`"
@@ -705,8 +1297,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "{{user_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{user_id}}"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_users` → `read`"
           },
@@ -728,16 +1327,32 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Budi Santoso (Updated)\",\n  \"phone\": \"08111222333\",\n  \"address\": \"Jl. Gatot Subroto No. 99, Jakarta Selatan\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "{{user_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{user_id}}"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_users` → `update`"
           },
@@ -759,16 +1374,33 @@
           ],
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"currentPassword\": \"Password@123\",\n  \"newPassword\": \"NewPass@456\",\n  \"confirmPassword\": \"NewPass@456\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users/{{user_id}}/change-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "{{user_id}}", "change-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{user_id}}",
+                "change-password"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_users` → `update`\n\n`currentPassword` opsional — jika diisi akan diverifikasi dulu."
           },
@@ -793,8 +1425,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/users/{{user_id}}/toggle-status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "{{user_id}}", "toggle-status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{user_id}}",
+                "toggle-status"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_users` → `update`\n\nToggle status user aktif/nonaktif."
           },
@@ -819,8 +1459,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "{{user_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{user_id}}"
+              ]
             },
             "description": "**Permission dibutuhkan:** `user_management_users` → `delete`\n\n⚠️ Hapus permanen, tidak bisa dibatalkan."
           },
@@ -832,21 +1479,44 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"],
+                "exec": [
+                  "pm.test('Status 401', () => pm.response.to.have.status(401));"
+                ],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Test\",\n  \"email\": \"test@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"phone\": \"081234\",\n  \"address\": \"Jakarta\",\n  \"gender\": \"male\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/users", "host": ["{{base_url}}"], "path": ["api", "v1", "users"] }
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
           },
           "response": []
         },
@@ -856,20 +1526,41 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"],
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Test User\",\n  \"email\": \"test@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@999\",\n  \"phone\": \"081234567890\",\n  \"address\": \"Jakarta\",\n  \"gender\": \"male\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/users", "host": ["{{base_url}}"], "path": ["api", "v1", "users"] }
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
           },
           "response": []
         },
@@ -879,22 +1570,666 @@
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test('Status 409', () => pm.response.to.have.status(409));"],
+                "exec": [
+                  "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                ],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Budi Duplikat\",\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"roleId\": \"{{role_id}}\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"phone\": \"08999888777\",\n  \"address\": \"Jakarta\",\n  \"gender\": \"male\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{base_url}}/api/v1/users", "host": ["{{base_url}}"], "path": ["api", "v1", "users"] }
+            "url": {
+              "raw": "{{base_url}}/api/v1/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "📁 Projects",
+      "description": "Manajemen Proyek. Semua endpoint membutuhkan JWT token dan permission `projects`.",
+      "item": [
+        {
+          "name": "1. Create Project — Lengkap (dengan PPn, PPh, Biaya, Marketer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('project_id', res.data.id);",
+                  "    console.log('✅ project_id tersimpan:', res.data.id);",
+                  "}",
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Response success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('Data memiliki id', () => pm.expect(res.data).to.have.property('id'));",
+                  "pm.test('Status default baru', () => pm.expect(res.data.status).to.eql('baru'));",
+                  "pm.test('Items tidak kosong', () => pm.expect(res.data.items).to.have.length.above(0));",
+                  "pm.test('totalNilai > 0', () => pm.expect(res.data.totalNilai).to.be.above(0));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n  \"kategori\": \"Software Development\",\n  \"deskripsi\": \"Pengembangan website e-commerce lengkap dengan sistem pembayaran dan manajemen inventory untuk PT. Maju Jaya\",\n  \"namaClient\": \"Pak Hendra Wijaya\",\n  \"kontak\": \"08123456789\",\n  \"instansi\": \"PT. Maju Jaya\",\n  \"prioritas\": \"tinggi\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"termin\",\n  \"items\": [\n    {\n      \"namaItem\": \"Jasa Pembuatan Website E-Commerce\",\n      \"quantity\": 1,\n      \"satuan\": \"paket\",\n      \"hargaSatuan\": 25000000\n    },\n    {\n      \"namaItem\": \"Hosting & Domain (1 tahun)\",\n      \"quantity\": 1,\n      \"satuan\": \"tahun\",\n      \"hargaSatuan\": 2500000\n    },\n    {\n      \"namaItem\": \"Training Penggunaan Sistem\",\n      \"quantity\": 2,\n      \"satuan\": \"hari\",\n      \"hargaSatuan\": 1500000\n    }\n  ],\n  \"nomorPO\": \"PO-2026-001\",\n  \"catatan\": \"Proyek harus selesai sebelum lebaran. Termin 50% di awal, 50% setelah selesai.\",\n  \"ppnPersen\": 11,\n  \"ppnNominal\": 3300000,\n  \"pphPersen\": 2,\n  \"pphNominal\": 600000,\n  \"biayaLainnya\": [\n    {\n      \"tipe\": \"e_materai\",\n      \"keterangan\": null,\n      \"nominal\": 10000\n    },\n    {\n      \"tipe\": \"biaya_admin\",\n      \"keterangan\": \"Biaya admin SIPLAH 1%\",\n      \"nominal\": 300000\n    },\n    {\n      \"tipe\": \"lainnya\",\n      \"keterangan\": \"Biaya presentasi ke klien\",\n      \"nominal\": 500000\n    }\n  ],\n  \"marketingExternal\": {\n    \"namaMarketer\": \"Budi Referral\",\n    \"kontak\": \"08987654321\",\n    \"tipeFee\": \"persentase\",\n    \"feePersentase\": 5,\n    \"feeNominal\": null,\n    \"totalNilai\": 1500000,\n    \"catatan\": \"Referral dari pameran IT Expo 2026\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ]
+            },
+            "description": "Buat proyek baru dengan semua field termasuk field opsional.\n\n**Permission dibutuhkan:** `projects` → `write`\n\n**Field wajib:** judulProyek, kategori, deskripsi, namaClient, kontak, instansi, prioritas, assignedToUserId, deadline, tipePembayaran, items\n\n**Field opsional:** nomorPO, catatan, ppnPersen, ppnNominal, pphPersen, pphNominal, biayaLainnya, marketingExternal\n\n**Catatan:** `totalNilai` dihitung **otomatis** dari `items` (quantity × hargaSatuan) — tidak perlu dikirim.\n\n**Tipe biaya lainnya:** `e_materai` | `materai` | `e_sign` | `biaya_admin` | `lainnya`\n\n**Tipe fee marketer:** `persentase` | `nominal`"
+          },
+          "response": [
+            {
+              "name": "201 — Proyek berhasil dibuat",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n  \"kategori\": \"Software Development\",\n  \"deskripsi\": \"Pengembangan website e-commerce\",\n  \"namaClient\": \"Pak Hendra Wijaya\",\n  \"kontak\": \"08123456789\",\n  \"instansi\": \"PT. Maju Jaya\",\n  \"prioritas\": \"tinggi\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"termin\",\n  \"items\": [{\"namaItem\": \"Jasa Website\", \"quantity\": 1, \"satuan\": \"paket\", \"hargaSatuan\": 25000000}]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Proyek berhasil dibuat\",\n  \"data\": {\n    \"id\": \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\",\n    \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n    \"kategori\": \"Software Development\",\n    \"deskripsi\": \"Pengembangan website e-commerce lengkap...\",\n    \"namaClient\": \"Pak Hendra Wijaya\",\n    \"kontak\": \"08123456789\",\n    \"instansi\": \"PT. Maju Jaya\",\n    \"prioritas\": \"tinggi\",\n    \"assignedToUserId\": \"uuid-user\",\n    \"deadline\": \"2026-12-31T00:00:00.000Z\",\n    \"tipePembayaran\": \"termin\",\n    \"items\": [\n      { \"namaItem\": \"Jasa Pembuatan Website E-Commerce\", \"quantity\": 1, \"satuan\": \"paket\", \"hargaSatuan\": 25000000, \"subtotal\": 25000000 },\n      { \"namaItem\": \"Hosting & Domain (1 tahun)\", \"quantity\": 1, \"satuan\": \"tahun\", \"hargaSatuan\": 2500000, \"subtotal\": 2500000 },\n      { \"namaItem\": \"Training Penggunaan Sistem\", \"quantity\": 2, \"satuan\": \"hari\", \"hargaSatuan\": 1500000, \"subtotal\": 3000000 }\n    ],\n    \"totalNilai\": 30500000,\n    \"nomorPO\": \"PO-2026-001\",\n    \"catatan\": \"Proyek harus selesai sebelum lebaran.\",\n    \"ppnPersen\": 11,\n    \"ppnNominal\": 3300000,\n    \"pphPersen\": 2,\n    \"pphNominal\": 600000,\n    \"biayaLainnya\": [\n      { \"tipe\": \"e_materai\", \"keterangan\": null, \"nominal\": 10000 },\n      { \"tipe\": \"biaya_admin\", \"keterangan\": \"Biaya admin SIPLAH 1%\", \"nominal\": 300000 },\n      { \"tipe\": \"lainnya\", \"keterangan\": \"Biaya presentasi ke klien\", \"nominal\": 500000 }\n    ],\n    \"marketingExternal\": {\n      \"namaMarketer\": \"Budi Referral\",\n      \"kontak\": \"08987654321\",\n      \"tipeFee\": \"persentase\",\n      \"feePersentase\": 5,\n      \"feeNominal\": null,\n      \"totalNilai\": 1500000,\n      \"catatan\": \"Referral dari pameran IT Expo 2026\"\n    },\n    \"status\": \"baru\",\n    \"createdByUserId\": \"uuid-creator\",\n    \"createdAt\": \"2026-03-08T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-08T04:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "401 — Token tidak ada / expired",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "403 — Permission tidak cukup",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 403,\n  \"message\": \"Akses ditolak. Role \\\"Viewer\\\" tidak memiliki izin \\\"write\\\" pada fitur \\\"projects\\\".\"\n}"
+            },
+            {
+              "name": "422 — Validasi gagal (items kosong)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"judulProyek\": \"Test\",\n  \"items\": []\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 422,\n  \"message\": \"Validation failed\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "2. Create Project — Minimal (wajib saja, tanpa opsional)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('Status default baru', () => pm.expect(res.data.status).to.eql('baru'));",
+                  "pm.test('nomorPO null', () => pm.expect(res.data.nomorPO).to.be.null);",
+                  "pm.test('marketingExternal null', () => pm.expect(res.data.marketingExternal).to.be.null);",
+                  "pm.test('biayaLainnya kosong', () => pm.expect(res.data.biayaLainnya).to.eql([]));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judulProyek\": \"Aplikasi Absensi Mobile PT. Sejahtera\",\n  \"kategori\": \"Mobile Development\",\n  \"deskripsi\": \"Pembuatan aplikasi absensi berbasis GPS untuk karyawan lapangan PT. Sejahtera\",\n  \"namaClient\": \"Bu Dewi Sartika\",\n  \"kontak\": \"081298765432\",\n  \"instansi\": \"PT. Sejahtera Abadi\",\n  \"prioritas\": \"sedang\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-09-30\",\n  \"tipePembayaran\": \"reguler\",\n  \"items\": [\n    {\n      \"namaItem\": \"Jasa Pembuatan Aplikasi Mobile (Android & iOS)\",\n      \"quantity\": 1,\n      \"satuan\": \"paket\",\n      \"hargaSatuan\": 18000000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ]
+            },
+            "description": "Buat proyek baru hanya dengan field wajib. Semua field opsional (nomorPO, catatan, ppn, pph, biayaLainnya, marketingExternal) tidak perlu dikirim.\n\n**Permission dibutuhkan:** `projects` → `write`"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Project — Tipe Sewa dengan Marketer Fee Nominal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Tipe pembayaran sewa', () => pm.expect(pm.response.json().data.tipePembayaran).to.eql('sewa'));",
+                  "pm.test('Marketer fee nominal', () => pm.expect(pm.response.json().data.marketingExternal.tipeFee).to.eql('nominal'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judulProyek\": \"Sewa Server Cloud 12 Bulan - Dinas Pendidikan\",\n  \"kategori\": \"Infrastructure\",\n  \"deskripsi\": \"Layanan sewa server cloud kapasitas 500GB untuk kebutuhan sistem informasi Dinas Pendidikan Kota X\",\n  \"namaClient\": \"Pak Agus Salim\",\n  \"kontak\": \"08555444333\",\n  \"instansi\": \"Dinas Pendidikan Kota X\",\n  \"prioritas\": \"rendah\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2027-03-08\",\n  \"tipePembayaran\": \"sewa\",\n  \"items\": [\n    {\n      \"namaItem\": \"Sewa Server Cloud 500GB\",\n      \"quantity\": 12,\n      \"satuan\": \"bulan\",\n      \"hargaSatuan\": 1500000\n    },\n    {\n      \"namaItem\": \"Biaya Setup & Konfigurasi Awal\",\n      \"quantity\": 1,\n      \"satuan\": \"kali\",\n      \"hargaSatuan\": 2000000\n    }\n  ],\n  \"nomorPO\": \"PO-DISDIK-2026-012\",\n  \"ppnPersen\": 11,\n  \"biayaLainnya\": [\n    {\n      \"tipe\": \"materai\",\n      \"keterangan\": null,\n      \"nominal\": 10000\n    },\n    {\n      \"tipe\": \"e_sign\",\n      \"keterangan\": null,\n      \"nominal\": 50000\n    }\n  ],\n  \"marketingExternal\": {\n    \"namaMarketer\": \"Rina Marketer\",\n    \"kontak\": \"082133445566\",\n    \"tipeFee\": \"nominal\",\n    \"feePersentase\": null,\n    \"feeNominal\": 1000000,\n    \"totalNilai\": 1000000,\n    \"catatan\": \"Kenalan lama dari dinas\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ]
+            },
+            "description": "Contoh proyek tipe **sewa** dengan marketer fee **nominal** (bukan persentase).\n\n**Permission dibutuhkan:** `projects` → `write`"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Create Project — 401 Tanpa Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judulProyek\": \"Test Tanpa Token\",\n  \"kategori\": \"Test\",\n  \"deskripsi\": \"Test\",\n  \"namaClient\": \"Test\",\n  \"kontak\": \"081234\",\n  \"instansi\": \"Test\",\n  \"prioritas\": \"rendah\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"reguler\",\n  \"items\": [{\"namaItem\": \"Test\", \"quantity\": 1, \"satuan\": \"pcs\", \"hargaSatuan\": 100000}]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Create Project — 422 Field Wajib Kosong",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 422 atau 400', () => pm.expect(pm.response.code).to.be.oneOf([400, 422]));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judulProyek\": \"\",\n  \"items\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ]
+            },
+            "description": "Test validasi — judulProyek kosong dan items array kosong."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get All Projects (Semua, tanpa filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('data adalah array', () => pm.expect(res.data.data).to.be.an('array'));",
+                  "pm.test('Ada field total', () => pm.expect(res.data).to.have.property('total'));",
+                  "pm.test('Ada field summary', () => pm.expect(res.data).to.have.property('summary'));",
+                  "pm.test('summary punya total', () => pm.expect(res.data.summary).to.have.property('total'));",
+                  "if (res.data.data.length > 0) {",
+                  "  const item = res.data.data[0];",
+                  "  pm.test('Item punya nomorProyek', () => pm.expect(item).to.have.property('nomorProyek'));",
+                  "  pm.test('Item punya deadlineStatus', () => pm.expect(item).to.have.property('deadlineStatus'));",
+                  "  pm.test('Item punya sisaHari', () => pm.expect(item).to.have.property('sisaHari'));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects?page=1&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Ambil semua proyek dengan pagination.\n\n**Permission dibutuhkan:** `projects` → `read`\n\n**Response `data` setiap item:**\n- `id`, `nomorProyek` (PRJ-001), `judulProyek`, `kategori`\n- `deskripsiSingkat` (maks 120 karakter)\n- `namaClient`, `instansi`\n- `status`, `prioritas`, `tipePembayaran`\n- `deadline` (YYYY-MM-DD)\n- `deadlineStatus`: `lewat` | `hari_ini` | `minggu_ini` | `normal`\n- `sisaHari`: integer (negatif = terlambat)\n- `totalNilai`, `createdAt`\n\n**Response `summary`:** total, baru, proses, pending, selesai, dibayar, dibatalkan"
+          },
+          "response": [
+            {
+              "name": "200 — Daftar proyek berhasil diambil",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "projects"],
+                  "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "10"}]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Daftar proyek berhasil diambil\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"uuid-1\",\n        \"nomorProyek\": \"PRJ-001\",\n        \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n        \"kategori\": \"Software Development\",\n        \"deskripsiSingkat\": \"Pengembangan website e-commerce lengkap dengan sistem pembayaran...\",\n        \"namaClient\": \"Pak Hendra Wijaya\",\n        \"instansi\": \"PT. Maju Jaya\",\n        \"status\": \"baru\",\n        \"prioritas\": \"tinggi\",\n        \"tipePembayaran\": \"termin\",\n        \"deadline\": \"2026-12-31\",\n        \"deadlineStatus\": \"normal\",\n        \"sisaHari\": 298,\n        \"totalNilai\": 30500000,\n        \"createdAt\": \"2026-03-08T04:00:00.000Z\"\n      }\n    ],\n    \"total\": 1,\n    \"page\": 1,\n    \"limit\": 10,\n    \"totalPages\": 1,\n    \"summary\": {\n      \"total\": 1,\n      \"baru\": 1,\n      \"proses\": 0,\n      \"pending\": 0,\n      \"selesai\": 0,\n      \"dibayar\": 0,\n      \"dibatalkan\": 0\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "4a. Get All Projects — Filter by Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "if (res.data.data.length > 0) {",
+                  "  pm.test('Semua status = baru', () => res.data.data.every(p => p.status === 'baru'));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects?page=1&limit=10&status=baru",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"},
+                {"key": "status", "value": "baru"}
+              ]
+            },
+            "description": "Filter proyek dengan status **baru**.\n\nGanti value `status` dengan: `baru` | `proses` | `pending` | `selesai` | `dibayar` | `dibatalkan`"
+          },
+          "response": []
+        },
+        {
+          "name": "4b. Get All Projects — Filter by Tipe Pembayaran (Tab Termin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "if (res.data.data.length > 0) {",
+                  "  pm.test('Semua tipePembayaran = termin', () => res.data.data.every(p => p.tipePembayaran === 'termin'));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects?page=1&limit=10&tipePembayaran=termin",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"},
+                {"key": "tipePembayaran", "value": "termin"}
+              ]
+            },
+            "description": "Filter tab **Termin** di UI.\n\nGanti `tipePembayaran` dengan: `reguler` | `termin` | `sewa`"
+          },
+          "response": []
+        },
+        {
+          "name": "4c. Get All Projects — Search by Nama / Klien",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects?page=1&limit=10&search=maju",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"},
+                {"key": "search", "value": "maju"}
+              ]
+            },
+            "description": "Cari proyek berdasarkan judul, nama client, atau instansi (ILIKE / case-insensitive)."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Project by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('id cocok', () => pm.expect(res.data.id).to.eql(pm.collectionVariables.get('project_id')));",
+                  "pm.test('Ada nomorProyek', () => pm.expect(res.data).to.have.property('nomorProyek'));",
+                  "pm.test('Ada items array', () => pm.expect(res.data.items).to.be.an('array'));",
+                  "pm.test('Ada biayaLainnya array', () => pm.expect(res.data.biayaLainnya).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            },
+            "description": "Ambil detail lengkap proyek berdasarkan UUID.\n\n**Permission dibutuhkan:** `projects` → `read`\n\n**Response:** Full `ProjectResponseDto` — termasuk semua items, biayaLainnya, marketingExternal, ppn, pph."
+          },
+          "response": [
+            {
+              "name": "200 — Detail proyek",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "projects", "{{project_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Detail proyek berhasil diambil\",\n  \"data\": {\n    \"id\": \"uuid-1\",\n    \"nomorProyek\": \"PRJ-001\",\n    \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n    \"kategori\": \"Software Development\",\n    \"deskripsi\": \"Pengembangan website e-commerce lengkap...\",\n    \"namaClient\": \"Pak Hendra Wijaya\",\n    \"kontak\": \"08123456789\",\n    \"instansi\": \"PT. Maju Jaya\",\n    \"prioritas\": \"tinggi\",\n    \"assignedToUserId\": \"uuid-user\",\n    \"deadline\": \"2026-12-31T00:00:00.000Z\",\n    \"tipePembayaran\": \"termin\",\n    \"items\": [\n      {\"namaItem\": \"Jasa Website\", \"quantity\": 1, \"satuan\": \"paket\", \"hargaSatuan\": 25000000, \"subtotal\": 25000000}\n    ],\n    \"totalNilai\": 30500000,\n    \"nomorPO\": \"PO-2026-001\",\n    \"catatan\": \"Proyek harus selesai sebelum lebaran.\",\n    \"ppnPersen\": 11,\n    \"ppnNominal\": 3300000,\n    \"pphPersen\": 2,\n    \"pphNominal\": 600000,\n    \"biayaLainnya\": [{\"tipe\": \"e_materai\", \"keterangan\": null, \"nominal\": 10000}],\n    \"marketingExternal\": {\"namaMarketer\": \"Budi\", \"kontak\": \"089...\", \"tipeFee\": \"persentase\", \"feePersentase\": 5, \"feeNominal\": null, \"totalNilai\": 1500000, \"catatan\": null},\n    \"status\": \"baru\",\n    \"createdByUserId\": \"uuid-creator\",\n    \"createdAt\": \"2026-03-08T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-08T04:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "404 — Proyek tidak ditemukan",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects/00000000-0000-4000-8000-000000000000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "projects", "00000000-0000-4000-8000-000000000000"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 404,\n  \"message\": \"Proyek dengan id \\\"00000000-0000-4000-8000-000000000000\\\" tidak ditemukan\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -904,16 +2239,33 @@
         {
           "name": "Info: Features, Actions & Permission Matrix",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/roles?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "roles"],
-              "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "10" }]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
             },
-            "description": "## SystemFeature\n\n| Feature Key | Menu |\n|---|---|\n| `dashboard` | Dashboard |\n| `user_management_roles` | User Management → Roles |\n| `user_management_users` | User Management → Users |\n| `projects` | Projects |\n| `penawaran` | Penawaran |\n| `laporan_harian` | Laporan Harian |\n| `laporan_neraca` | Laporan Neraca |\n| `laporan_laba_rugi` | Laporan Laba Rugi |\n| `laporan_arus_kas` | Laporan Arus Kas |\n| `settings` | Settings |\n\n## FeatureAction\n\n| Action | Endpoint yang dijaga |\n|---|---|\n| `read` | GET (list & detail) |\n| `write` | POST (create) |\n| `update` | PUT, PATCH |\n| `delete` | DELETE |\n\n## Permission Matrix Endpoint\n\n| Endpoint | Feature | Action |\n|---|---|---|\n| GET /roles | user_management_roles | read |\n| GET /roles/:id | user_management_roles | read |\n| POST /roles | user_management_roles | write |\n| PUT /roles/:id | user_management_roles | update |\n| PATCH /roles/:id/toggle-status | user_management_roles | update |\n| DELETE /roles/:id | user_management_roles | delete |\n| GET /users | user_management_users | read |\n| GET /users/:id | user_management_users | read |\n| POST /users | user_management_users | write |\n| PUT /users/:id | user_management_users | update |\n| PATCH /users/:id/change-password | user_management_users | update |\n| PATCH /users/:id/toggle-status | user_management_users | update |\n| DELETE /users/:id | user_management_users | delete |\n\n## Error Codes\n\n| Code | Penyebab |\n|---|---|\n| 401 | Token tidak ada / expired / user nonaktif |\n| 403 | Token valid tapi permission tidak cukup |\n| 403 | Role dinonaktifkan (isActive = false) |"
+            "description": "## SystemFeature\n\n| Feature Key | Menu |\n|---|---|\n| `dashboard` | Dashboard |\n| `user_management_roles` | User Management → Roles |\n| `user_management_users` | User Management → Users |\n| `projects` | Projects |\n| `penawaran` | Penawaran |\n| `hutang_piutang` | Hutang & Piutang |\n| `laporan_harian` | Laporan Harian |\n| `laporan_neraca` | Laporan Neraca |\n| `laporan_laba_rugi` | Laporan Laba Rugi |\n| `laporan_arus_kas` | Laporan Arus Kas |\n| `settings` | Settings |\n\n## FeatureAction\n\n| Action | Endpoint yang dijaga |\n|---|---|\n| `read` | GET (list & detail) |\n| `write` | POST (create) |\n| `update` | PUT, PATCH |\n| `delete` | DELETE |\n\n## Permission Matrix Endpoint\n\n| Endpoint | Feature | Action |\n|---|---|---|\n| GET /roles | user_management_roles | read |\n| GET /roles/:id | user_management_roles | read |\n| POST /roles | user_management_roles | write |\n| PUT /roles/:id | user_management_roles | update |\n| PATCH /roles/:id/toggle-status | user_management_roles | update |\n| DELETE /roles/:id | user_management_roles | delete |\n| GET /users | user_management_users | read |\n| GET /users/:id | user_management_users | read |\n| POST /users | user_management_users | write |\n| PUT /users/:id | user_management_users | update |\n| PATCH /users/:id/change-password | user_management_users | update |\n| PATCH /users/:id/toggle-status | user_management_users | update |\n| DELETE /users/:id | user_management_users | delete |\n| POST /projects | projects | write |\n| GET /projects | projects | read |\n| GET /projects/:id | projects | read |\n\n## Project — Nilai Enum\n\n### prioritas\n`rendah` | `sedang` | `tinggi`\n\n### tipePembayaran\n`reguler` | `termin` | `sewa`\n\n### status (default: baru)\n`baru` | `proses` | `pending` | `selesai` | `dibayar` | `dibatalkan`\n\n### tipe biayaLainnya\n`e_materai` | `materai` | `e_sign` | `biaya_admin` | `lainnya`\n\n### tipeFee (marketingExternal)\n`persentase` | `nominal`\n\n## Error Codes\n\n| Code | Penyebab |\n|---|---|\n| 401 | Token tidak ada / expired / user nonaktif |\n| 403 | Token valid tapi permission tidak cukup |\n| 403 | Role dinonaktifkan (isActive = false) |\n| 422 | Validasi DTO gagal |"
           },
           "response": []
         }
