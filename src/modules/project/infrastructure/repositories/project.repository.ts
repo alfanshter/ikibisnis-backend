@@ -207,4 +207,8 @@ export class ProjectRepository implements IProjectRepository {
       updatedAt: orm.updatedAt,
     });
   }
+
+  async hardDelete(id: string): Promise<void> {
+    await this.repo.delete(id);
+  }
 }

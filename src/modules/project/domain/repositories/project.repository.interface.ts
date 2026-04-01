@@ -28,4 +28,5 @@ export abstract class IProjectRepository {
   abstract findAll(query: ProjectFindAllQuery): Promise<ProjectFindAllResult>;
   abstract countByStatus(): Promise<ProjectStatusSummary>;
   abstract nextNomorProyek(): Promise<string>;
+  abstract hardDelete(id: string): Promise<void>;
 }

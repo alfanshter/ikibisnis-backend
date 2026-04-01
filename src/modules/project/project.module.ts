@@ -13,6 +13,7 @@ import { ProjectRepository } from './infrastructure/repositories/project.reposit
 import { CreateProjectUseCase } from './application/use-cases/create-project.use-case';
 import { GetAllProjectsUseCase } from './application/use-cases/get-all-projects.use-case';
 import { GetProjectByIdUseCase } from './application/use-cases/get-project-by-id.use-case';
+import { DeleteProjectUseCase } from './application/use-cases/delete-project.use-case';
 
 // Presentation
 import { ProjectController } from './presentation/project.controller';
@@ -28,6 +29,7 @@ const USE_CASES = [
   CreateProjectUseCase,
   GetAllProjectsUseCase,
   GetProjectByIdUseCase,
+  DeleteProjectUseCase,
 ];
 
 @Module({

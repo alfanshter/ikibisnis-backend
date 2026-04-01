@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -34,6 +35,7 @@ import { PaginatedProjectResponseDto } from '../application/dtos/project-list-re
 import { CreateProjectUseCase } from '../application/use-cases/create-project.use-case';
 import { GetAllProjectsUseCase } from '../application/use-cases/get-all-projects.use-case';
 import { GetProjectByIdUseCase } from '../application/use-cases/get-project-by-id.use-case';
+import { DeleteProjectUseCase } from '../application/use-cases/delete-project.use-case';
 import type { JwtPayload } from '../../auth/infrastructure/strategies/jwt.strategy';
 
 @ApiTags('Projects')
@@ -46,6 +48,7 @@ export class ProjectController {
     private readonly createProject: CreateProjectUseCase,
     private readonly getAllProjects: GetAllProjectsUseCase,
     private readonly getProjectById: GetProjectByIdUseCase,
+    private readonly deleteProject: DeleteProjectUseCase,
   ) {}
 
   // ─── CREATE ─────────────────────────────────────────────────────────────────
@@ -126,5 +129,26 @@ export class ProjectController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): Promise<ProjectResponseDto> {
     return this.getProjectById.execute(id);
+  }
+
+  // ─── DELETE ──────────────────────────────────────────────────────────────────
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('Proyek berhasil dihapus')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @RequirePermission(SystemFeature.PROJECTS, FeatureAction.DELETE)
+  @ApiOperation({ summary: 'Hapus proyek secara permanen' })
+  @ApiResponse({ status: 200, description: 'Proyek berhasil dihapus' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden — insufficient permission',
+  })
+  @ApiResponse({ status: 404, description: 'Proyek tidak ditemukan' })
+  async remove(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<{ message: string }> {
+    return this.deleteProject.execute(id);
   }
 }

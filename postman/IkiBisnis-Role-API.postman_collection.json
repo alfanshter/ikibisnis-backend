@@ -101,7 +101,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"budi.santoso@ikibisnis.com\",\n  \"password\": \"Password@123\"\n}",
+              "raw": "{\n  \"email\": \"alfanno8@gmail.com\",\n  \"password\": \"Alfan@Dinda123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1279,6 +1279,75 @@
           "response": []
         },
         {
+          "name": "3b. Get Active Users (isActive=true)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Data array', () => pm.expect(res.data.data).to.be.an('array'));",
+                  "pm.test('Semua user isActive=true', () => {",
+                  "    res.data.data.forEach(u => pm.expect(u.isActive).to.be.true);",
+                  "});",
+                  "pm.test('passwordHash tidak ada', () => {",
+                  "    res.data.data.forEach(u => pm.expect(u).to.not.have.property('passwordHash'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users?limit=100&isActive=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "male",
+                  "disabled": true
+                },
+                {
+                  "key": "roleId",
+                  "value": "{{role_id}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Ambil semua user yang aktif (`isActive=true`) dengan limit maksimal 100.\n\n**Permission dibutuhkan:** `user_management_users` → `read`\n\n**Query params aktif:**\n- `limit=100` — ambil hingga 100 data\n- `isActive=true` — hanya user aktif\n\n**Query params opsional (disabled):**\n- `page` — halaman\n- `search` — cari nama/email\n- `gender` — filter gender\n- `roleId` — filter berdasarkan role"
+          },
+          "response": []
+        },
+        {
           "name": "4. Get User by ID",
           "event": [
             {
@@ -2230,6 +2299,86 @@
               "body": "{\n  \"success\": false,\n  \"statusCode\": 404,\n  \"message\": \"Proyek dengan id \\\"00000000-0000-4000-8000-000000000000\\\" tidak ditemukan\"\n}"
             }
           ]
+        },
+        {
+          "name": "6. Delete Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success true', () => pm.expect(res.success).to.be.true);",
+                  "pm.test('message berisi dihapus', () => pm.expect(res.message).to.include('berhasil dihapus'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            },
+            "description": "Hapus proyek secara permanen berdasarkan UUID.\n\n**Permission dibutuhkan:** `projects` → `delete`\n\n**⚠️ Peringatan:** Aksi ini tidak bisa dibatalkan. Pastikan project_id sudah benar sebelum menjalankan."
+          },
+          "response": [
+            {
+              "name": "200 — Proyek berhasil dihapus",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "projects", "{{project_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Proyek berhasil dihapus\",\n  \"data\": {\n    \"message\": \"Proyek \\\"Website E-Commerce PT. Maju Jaya\\\" berhasil dihapus\"\n  }\n}"
+            },
+            {
+              "name": "404 — Proyek tidak ditemukan",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects/00000000-0000-4000-8000-000000000000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "projects", "00000000-0000-4000-8000-000000000000"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 404,\n  \"message\": \"Proyek dengan ID \\\"00000000-0000-4000-8000-000000000000\\\" tidak ditemukan\"\n}"
+            },
+            {
+              "name": "403 — Permission tidak cukup",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "projects", "{{project_id}}"]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"success\": false,\n  \"statusCode\": 403,\n  \"message\": \"Akses ditolak. Role \\\"Viewer\\\" tidak memiliki izin \\\"delete\\\" pada fitur \\\"projects\\\".\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -2265,7 +2414,7 @@
                 }
               ]
             },
-            "description": "## SystemFeature\n\n| Feature Key | Menu |\n|---|---|\n| `dashboard` | Dashboard |\n| `user_management_roles` | User Management → Roles |\n| `user_management_users` | User Management → Users |\n| `projects` | Projects |\n| `penawaran` | Penawaran |\n| `hutang_piutang` | Hutang & Piutang |\n| `laporan_harian` | Laporan Harian |\n| `laporan_neraca` | Laporan Neraca |\n| `laporan_laba_rugi` | Laporan Laba Rugi |\n| `laporan_arus_kas` | Laporan Arus Kas |\n| `settings` | Settings |\n\n## FeatureAction\n\n| Action | Endpoint yang dijaga |\n|---|---|\n| `read` | GET (list & detail) |\n| `write` | POST (create) |\n| `update` | PUT, PATCH |\n| `delete` | DELETE |\n\n## Permission Matrix Endpoint\n\n| Endpoint | Feature | Action |\n|---|---|---|\n| GET /roles | user_management_roles | read |\n| GET /roles/:id | user_management_roles | read |\n| POST /roles | user_management_roles | write |\n| PUT /roles/:id | user_management_roles | update |\n| PATCH /roles/:id/toggle-status | user_management_roles | update |\n| DELETE /roles/:id | user_management_roles | delete |\n| GET /users | user_management_users | read |\n| GET /users/:id | user_management_users | read |\n| POST /users | user_management_users | write |\n| PUT /users/:id | user_management_users | update |\n| PATCH /users/:id/change-password | user_management_users | update |\n| PATCH /users/:id/toggle-status | user_management_users | update |\n| DELETE /users/:id | user_management_users | delete |\n| POST /projects | projects | write |\n| GET /projects | projects | read |\n| GET /projects/:id | projects | read |\n\n## Project — Nilai Enum\n\n### prioritas\n`rendah` | `sedang` | `tinggi`\n\n### tipePembayaran\n`reguler` | `termin` | `sewa`\n\n### status (default: baru)\n`baru` | `proses` | `pending` | `selesai` | `dibayar` | `dibatalkan`\n\n### tipe biayaLainnya\n`e_materai` | `materai` | `e_sign` | `biaya_admin` | `lainnya`\n\n### tipeFee (marketingExternal)\n`persentase` | `nominal`\n\n## Error Codes\n\n| Code | Penyebab |\n|---|---|\n| 401 | Token tidak ada / expired / user nonaktif |\n| 403 | Token valid tapi permission tidak cukup |\n| 403 | Role dinonaktifkan (isActive = false) |\n| 422 | Validasi DTO gagal |"
+            "description": "## SystemFeature\n\n| Feature Key | Menu |\n|---|---|\n| `dashboard` | Dashboard |\n| `user_management_roles` | User Management → Roles |\n| `user_management_users` | User Management → Users |\n| `projects` | Projects |\n| `penawaran` | Penawaran |\n| `hutang_piutang` | Hutang & Piutang |\n| `laporan_harian` | Laporan Harian |\n| `laporan_neraca` | Laporan Neraca |\n| `laporan_laba_rugi` | Laporan Laba Rugi |\n| `laporan_arus_kas` | Laporan Arus Kas |\n| `settings` | Settings |\n\n## FeatureAction\n\n| Action | Endpoint yang dijaga |\n|---|---|\n| `read` | GET (list & detail) |\n| `write` | POST (create) |\n| `update` | PUT, PATCH |\n| `delete` | DELETE |\n\n## Permission Matrix Endpoint\n\n| Endpoint | Feature | Action |\n|---|---|---|\n| GET /roles | user_management_roles | read |\n| GET /roles/:id | user_management_roles | read |\n| POST /roles | user_management_roles | write |\n| PUT /roles/:id | user_management_roles | update |\n| PATCH /roles/:id/toggle-status | user_management_roles | update |\n| DELETE /roles/:id | user_management_roles | delete |\n| GET /users | user_management_users | read |\n| GET /users/:id | user_management_users | read |\n| POST /users | user_management_users | write |\n| PUT /users/:id | user_management_users | update |\n| PATCH /users/:id/change-password | user_management_users | update |\n| PATCH /users/:id/toggle-status | user_management_users | update |\n| DELETE /users/:id | user_management_users | delete |\n| POST /projects | projects | write |\n| GET /projects | projects | read |\n| GET /projects/:id | projects | read |\n| DELETE /projects/:id | projects | delete |\n\n## Project — Nilai Enum\n\n### prioritas\n`rendah` | `sedang` | `tinggi`\n\n### tipePembayaran\n`reguler` | `termin` | `sewa`\n\n### status (default: baru)\n`baru` | `proses` | `pending` | `selesai` | `dibayar` | `dibatalkan`\n\n### tipe biayaLainnya\n`e_materai` | `materai` | `e_sign` | `biaya_admin` | `lainnya`\n\n### tipeFee (marketingExternal)\n`persentase` | `nominal`\n\n## Error Codes\n\n| Code | Penyebab |\n|---|---|\n| 401 | Token tidak ada / expired / user nonaktif |\n| 403 | Token valid tapi permission tidak cukup |\n| 403 | Role dinonaktifkan (isActive = false) |\n| 422 | Validasi DTO gagal |"
           },
           "response": []
         }
