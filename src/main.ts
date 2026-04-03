@@ -50,7 +50,7 @@ async function bootstrap() {
   app.use(compression());
 
   // ── API Versioning ───────────────────────────────────────────────────────────
-  app.enableVersioning({ type: VersioningType.URI });
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
   // ── Global Prefix ────────────────────────────────────────────────────────────
   app.setGlobalPrefix('api');
