@@ -113,6 +113,9 @@ export class ProjectRepository implements IProjectRepository {
       quantity: i.quantity,
       satuan: i.satuan,
       hargaSatuan: i.hargaSatuan,
+      dpp: i.dpp,
+      ppnNominalItem: i.ppnNominalItem,
+      pphNominalItem: i.pphNominalItem,
     }));
     orm.totalNilai = project.totalNilai;
     orm.nomorPO = project.nomorPO;
@@ -121,6 +124,9 @@ export class ProjectRepository implements IProjectRepository {
     orm.ppnNominal = project.ppnNominal;
     orm.pphPersen = project.pphPersen;
     orm.pphNominal = project.pphNominal;
+    orm.sudahTermasukPajak = project.sudahTermasukPajak;
+    orm.ppnPersenItem = project.ppnPersenItem;
+    orm.pphPersenItem = project.pphPersenItem;
     orm.biayaLainnya = project.biayaLainnya.map((b) => ({
       tipe: b.tipe,
       keterangan: b.keterangan,
@@ -152,6 +158,9 @@ export class ProjectRepository implements IProjectRepository {
           quantity: i.quantity,
           satuan: i.satuan,
           hargaSatuan: i.hargaSatuan,
+          dpp: i.dpp ?? null,
+          ppnNominalItem: i.ppnNominalItem ?? null,
+          pphNominalItem: i.pphNominalItem ?? null,
         }),
     );
 
@@ -199,6 +208,11 @@ export class ProjectRepository implements IProjectRepository {
       ppnNominal: orm.ppnNominal !== null ? Number(orm.ppnNominal) : null,
       pphPersen: orm.pphPersen !== null ? Number(orm.pphPersen) : null,
       pphNominal: orm.pphNominal !== null ? Number(orm.pphNominal) : null,
+      sudahTermasukPajak: orm.sudahTermasukPajak ?? false,
+      ppnPersenItem:
+        orm.ppnPersenItem !== null ? Number(orm.ppnPersenItem) : null,
+      pphPersenItem:
+        orm.pphPersenItem !== null ? Number(orm.pphPersenItem) : null,
       biayaLainnya,
       marketingExternal,
       status: orm.status,

@@ -21,6 +21,41 @@ export class ProjectItemResponseDto {
 
   @ApiProperty()
   subtotal: number;
+
+  @ApiPropertyOptional({
+    description:
+      'DPP (Dasar Pengenaan Pajak) per satuan — harga sebelum pajak (Rp). ' +
+      'Bernilai null jika sudahTermasukPajak = false.',
+    example: 2000000,
+  })
+  dpp: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Nominal PPN per satuan (Rp)',
+    example: 220000,
+  })
+  ppnNominalItem: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Nominal PPh per satuan (Rp)',
+    example: 40000,
+  })
+  pphNominalItem: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Total DPP untuk line item ini (quantity × dpp)',
+  })
+  subtotalDpp: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Total PPN untuk line item ini (quantity × ppnNominalItem)',
+  })
+  subtotalPpn: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Total PPh untuk line item ini (quantity × pphNominalItem)',
+  })
+  subtotalPph: number | null;
 }
 
 export class OtherCostResponseDto {
@@ -123,6 +158,24 @@ export class ProjectResponseDto {
   @ApiPropertyOptional()
   pphNominal: number | null;
 
+  @ApiProperty({
+    description: 'Apakah semua harga item sudah include PPN & PPh',
+    example: false,
+  })
+  sudahTermasukPajak: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Rate PPN (%) yang diterapkan ke semua item',
+    example: 11,
+  })
+  ppnPersenItem: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Rate PPh (%) yang diterapkan ke semua item',
+    example: 2,
+  })
+  pphPersenItem: number | null;
+
   @ApiProperty({ type: [OtherCostResponseDto] })
   biayaLainnya: OtherCostResponseDto[];
 
@@ -163,6 +216,12 @@ export class ProjectResponseDto {
       satuan: item.satuan,
       hargaSatuan: item.hargaSatuan,
       subtotal: item.subtotal,
+      dpp: item.dpp,
+      ppnNominalItem: item.ppnNominalItem,
+      pphNominalItem: item.pphNominalItem,
+      subtotalDpp: item.subtotalDpp,
+      subtotalPpn: item.subtotalPpn,
+      subtotalPph: item.subtotalPph,
     }));
     dto.totalNilai = project.totalNilai;
     dto.nomorPO = project.nomorPO;
@@ -171,6 +230,9 @@ export class ProjectResponseDto {
     dto.ppnNominal = project.ppnNominal;
     dto.pphPersen = project.pphPersen;
     dto.pphNominal = project.pphNominal;
+    dto.sudahTermasukPajak = project.sudahTermasukPajak;
+    dto.ppnPersenItem = project.ppnPersenItem;
+    dto.pphPersenItem = project.pphPersenItem;
     dto.biayaLainnya = project.biayaLainnya.map((bc) => ({
       tipe: bc.tipe,
       keterangan: bc.keterangan,

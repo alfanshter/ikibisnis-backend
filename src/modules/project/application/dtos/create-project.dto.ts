@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -247,6 +248,41 @@ export class CreateProjectDto {
   @IsNumber()
   @Min(0)
   pphNominal?: number | null;
+
+  // ── Pajak Termasuk dalam Item ─────────────────────────────────────────────
+  @ApiPropertyOptional({
+    example: true,
+    description:
+      'Apakah semua harga item sudah termasuk PPN & PPh? ' +
+      'Jika true, sistem menghitung DPP, nominal PPN, dan nominal PPh untuk SETIAP item ' +
+      'menggunakan ppnPersenItem dan pphPersenItem.',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  sudahTermasukPajak?: boolean;
+
+  @ApiPropertyOptional({
+    example: 11,
+    description:
+      'Rate PPN (%) yang digunakan untuk menghitung breakdown pajak semua item — ' +
+      'wajib diisi jika sudahTermasukPajak = true',
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  ppnPersenItem?: number | null;
+
+  @ApiPropertyOptional({
+    example: 2,
+    description:
+      'Rate PPh (%) yang digunakan untuk menghitung breakdown pajak semua item — ' +
+      'opsional, diisi jika ada PPh',
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  pphPersenItem?: number | null;
 
   @ApiPropertyOptional({
     type: [OtherCostDto],

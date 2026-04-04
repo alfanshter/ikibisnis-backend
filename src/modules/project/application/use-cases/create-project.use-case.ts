@@ -19,22 +19,65 @@ export class CreateProjectUseCase {
   ): Promise<ProjectResponseDto> {
     const now = new Date();
 
-    // Map items
-    const items = dto.items.map(
-      (i) =>
-        new ProjectItem({
-          namaItem: i.namaItem,
-          quantity: i.quantity,
-          satuan: i.satuan,
-          hargaSatuan: i.hargaSatuan,
-        }),
-    );
+    // Map items — jika sudahTermasukPajak = true, hitung DPP, PPN, PPh per item
+    const sudahTermasukPajak = dto.sudahTermasukPajak ?? false;
+    const ppnPersenItem = dto.ppnPersenItem ?? null;
+    const pphPersenItem = dto.pphPersenItem ?? null;
+
+    const items = dto.items.map((i) => {
+      let dpp: number | null = null;
+      let ppnNominalItem: number | null = null;
+      let pphNominalItem: number | null = null;
+
+      if (sudahTermasukPajak && ppnPersenItem != null) {
+        // hargaSatuan sudah include PPN: DPP = harga / (1 + ppn/100)
+        dpp =
+          Math.round((i.hargaSatuan / (1 + ppnPersenItem / 100)) * 100) / 100;
+        ppnNominalItem = Math.round(dpp * (ppnPersenItem / 100) * 100) / 100;
+        if (pphPersenItem != null) {
+          pphNominalItem = Math.round(dpp * (pphPersenItem / 100) * 100) / 100;
+        }
+      }
+
+      return new ProjectItem({
+        namaItem: i.namaItem,
+        quantity: i.quantity,
+        satuan: i.satuan,
+        hargaSatuan: i.hargaSatuan,
+        dpp,
+        ppnNominalItem,
+        pphNominalItem,
+      });
+    });
 
     // Compute total nilai from items
     const totalNilai = items.reduce(
       (sum, item) => sum + item.quantity * item.hargaSatuan,
       0,
     );
+
+    // Jika sudahTermasukPajak, hitung ppnNominal & pphNominal total (sum semua items)
+    // dan isi ppnPersen/pphPersen dari rate yang dipakai
+    let derivedPpnPersen: number | null = dto.ppnPersen ?? null;
+    let derivedPpnNominal: number | null = dto.ppnNominal ?? null;
+    let derivedPphPersen: number | null = dto.pphPersen ?? null;
+    let derivedPphNominal: number | null = dto.pphNominal ?? null;
+
+    if (sudahTermasukPajak && ppnPersenItem != null) {
+      derivedPpnPersen = ppnPersenItem;
+      derivedPpnNominal =
+        Math.round(
+          items.reduce((sum, item) => sum + (item.subtotalPpn ?? 0), 0) * 100,
+        ) / 100;
+
+      if (pphPersenItem != null) {
+        derivedPphPersen = pphPersenItem;
+        derivedPphNominal =
+          Math.round(
+            items.reduce((sum, item) => sum + (item.subtotalPph ?? 0), 0) * 100,
+          ) / 100;
+      }
+    }
 
     // Map biaya lainnya
     const biayaLainnya = (dto.biayaLainnya ?? []).map(
@@ -78,10 +121,13 @@ export class CreateProjectUseCase {
       totalNilai,
       nomorPO: dto.nomorPO?.trim() ?? null,
       catatan: dto.catatan?.trim() ?? null,
-      ppnPersen: dto.ppnPersen ?? null,
-      ppnNominal: dto.ppnNominal ?? null,
-      pphPersen: dto.pphPersen ?? null,
-      pphNominal: dto.pphNominal ?? null,
+      ppnPersen: derivedPpnPersen,
+      ppnNominal: derivedPpnNominal,
+      pphPersen: derivedPphPersen,
+      pphNominal: derivedPphNominal,
+      sudahTermasukPajak,
+      ppnPersenItem,
+      pphPersenItem,
       biayaLainnya,
       marketingExternal,
       status: ProjectStatus.BARU,

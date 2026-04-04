@@ -17,6 +17,9 @@ export interface ProjectItemRecord {
   quantity: number;
   satuan: string;
   hargaSatuan: number;
+  dpp: number | null;
+  ppnNominalItem: number | null;
+  pphNominalItem: number | null;
 }
 
 /** Shape stored in the JSONB `biaya_lainnya` column */
@@ -133,6 +136,28 @@ export class ProjectOrmEntity {
     nullable: true,
   })
   pphNominal: number | null;
+
+  // ── Pajak Termasuk dalam Harga Item ───────────────────────────────────────
+  @Column({ name: 'sudah_termasuk_pajak', type: 'boolean', default: false })
+  sudahTermasukPajak: boolean;
+
+  @Column({
+    name: 'ppn_persen_item',
+    type: 'numeric',
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
+  ppnPersenItem: number | null;
+
+  @Column({
+    name: 'pph_persen_item',
+    type: 'numeric',
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
+  pphPersenItem: number | null;
 
   // ── Other Costs (JSONB) ───────────────────────────────────────────────────
   @Column({ name: 'biaya_lainnya', type: 'jsonb', default: [] })

@@ -1700,7 +1700,19 @@
                   "pm.test('Data memiliki id', () => pm.expect(res.data).to.have.property('id'));",
                   "pm.test('Status default baru', () => pm.expect(res.data.status).to.eql('baru'));",
                   "pm.test('Items tidak kosong', () => pm.expect(res.data.items).to.have.length.above(0));",
-                  "pm.test('totalNilai > 0', () => pm.expect(res.data.totalNilai).to.be.above(0));"
+                  "pm.test('totalNilai > 0', () => pm.expect(res.data.totalNilai).to.be.above(0));",
+                  "pm.test('Item pajak: dpp tidak null', () => {",
+                  "pm.test('sudahTermasukPajak di project level = true', () => pm.expect(res.data.sudahTermasukPajak).to.be.true);",
+                  "if (res.data.sudahTermasukPajak) {",
+                  "  pm.test('dpp ada di item[0]', () => pm.expect(res.data.items[0].dpp).to.be.a('number'));",
+                  "  pm.test('ppnNominalItem ada di item[0]', () => pm.expect(res.data.items[0].ppnNominalItem).to.be.a('number'));",
+                  "  pm.test('pphNominalItem ada di item[0]', () => pm.expect(res.data.items[0].pphNominalItem).to.be.a('number'));",
+                  "  pm.test('subtotalDpp ada di item[0]', () => pm.expect(res.data.items[0].subtotalDpp).to.be.a('number'));",
+                  "  pm.test('subtotalPpn ada di item[0]', () => pm.expect(res.data.items[0].subtotalPpn).to.be.a('number'));",
+                  "  pm.test('subtotalPph ada di item[0]', () => pm.expect(res.data.items[0].subtotalPph).to.be.a('number'));",
+                  "  console.log('✅ DPP:', res.data.items[0].dpp, '| PPN:', res.data.items[0].ppnNominalItem, '| PPh:', res.data.items[0].pphNominalItem);",
+                  "  }",
+                  "});"
                 ],
                 "type": "text/javascript"
               }
@@ -1716,7 +1728,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n  \"kategori\": \"Software Development\",\n  \"deskripsi\": \"Pengembangan website e-commerce lengkap dengan sistem pembayaran dan manajemen inventory untuk PT. Maju Jaya\",\n  \"namaClient\": \"Pak Hendra Wijaya\",\n  \"kontak\": \"08123456789\",\n  \"instansi\": \"PT. Maju Jaya\",\n  \"prioritas\": \"tinggi\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"termin\",\n  \"items\": [\n    {\n      \"namaItem\": \"Jasa Pembuatan Website E-Commerce\",\n      \"quantity\": 1,\n      \"satuan\": \"paket\",\n      \"hargaSatuan\": 25000000\n    },\n    {\n      \"namaItem\": \"Hosting & Domain (1 tahun)\",\n      \"quantity\": 1,\n      \"satuan\": \"tahun\",\n      \"hargaSatuan\": 2500000\n    },\n    {\n      \"namaItem\": \"Training Penggunaan Sistem\",\n      \"quantity\": 2,\n      \"satuan\": \"hari\",\n      \"hargaSatuan\": 1500000\n    }\n  ],\n  \"nomorPO\": \"PO-2026-001\",\n  \"catatan\": \"Proyek harus selesai sebelum lebaran. Termin 50% di awal, 50% setelah selesai.\",\n  \"ppnPersen\": 11,\n  \"ppnNominal\": 3300000,\n  \"pphPersen\": 2,\n  \"pphNominal\": 600000,\n  \"biayaLainnya\": [\n    {\n      \"tipe\": \"e_materai\",\n      \"keterangan\": null,\n      \"nominal\": 10000\n    },\n    {\n      \"tipe\": \"biaya_admin\",\n      \"keterangan\": \"Biaya admin SIPLAH 1%\",\n      \"nominal\": 300000\n    },\n    {\n      \"tipe\": \"lainnya\",\n      \"keterangan\": \"Biaya presentasi ke klien\",\n      \"nominal\": 500000\n    }\n  ],\n  \"marketingExternal\": {\n    \"namaMarketer\": \"Budi Referral\",\n    \"kontak\": \"08987654321\",\n    \"tipeFee\": \"persentase\",\n    \"feePersentase\": 5,\n    \"feeNominal\": null,\n    \"totalNilai\": 1500000,\n    \"catatan\": \"Referral dari pameran IT Expo 2026\"\n  }\n}",
+              "raw": "{\n  \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n  \"kategori\": \"Software Development\",\n  \"deskripsi\": \"Pengembangan website e-commerce lengkap dengan sistem pembayaran dan manajemen inventory untuk PT. Maju Jaya\",\n  \"namaClient\": \"Pak Hendra Wijaya\",\n  \"kontak\": \"08123456789\",\n  \"instansi\": \"PT. Maju Jaya\",\n  \"prioritas\": \"tinggi\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"termin\",\n  \"items\": [\n    {\n      \"namaItem\": \"Jasa Pembuatan Website E-Commerce\",\n      \"quantity\": 1,\n      \"satuan\": \"paket\",\n      \"hargaSatuan\": 27750000\n    },\n    {\n      \"namaItem\": \"Hosting & Domain (1 tahun)\",\n      \"quantity\": 1,\n      \"satuan\": \"tahun\",\n      \"hargaSatuan\": 2500000\n    },\n    {\n      \"namaItem\": \"Training Penggunaan Sistem\",\n      \"quantity\": 2,\n      \"satuan\": \"hari\",\n      \"hargaSatuan\": 1500000\n    }\n  ],\n  \"nomorPO\": \"PO-2026-001\",\n  \"catatan\": \"Proyek harus selesai sebelum lebaran. Termin 50% di awal, 50% setelah selesai.\",\n  \"ppnPersen\": 11,\n  \"ppnNominal\": 3300000,\n  \"pphPersen\": 2,\n  \"pphNominal\": 600000,\n  \"biayaLainnya\": [\n    {\n      \"tipe\": \"e_materai\",\n      \"keterangan\": null,\n      \"nominal\": 10000\n    },\n    {\n      \"tipe\": \"biaya_admin\",\n      \"keterangan\": \"Biaya admin SIPLAH 1%\",\n      \"nominal\": 300000\n    },\n    {\n      \"tipe\": \"lainnya\",\n      \"keterangan\": \"Biaya presentasi ke klien\",\n      \"nominal\": 500000\n    }\n  ],\n  \"marketingExternal\": {\n    \"namaMarketer\": \"Budi Referral\",\n    \"kontak\": \"08987654321\",\n    \"tipeFee\": \"persentase\",\n    \"feePersentase\": 5,\n    \"feeNominal\": null,\n    \"totalNilai\": 1500000,\n    \"catatan\": \"Referral dari pameran IT Expo 2026\"\n  },\n  \"sudahTermasukPajak\": true,\n  \"ppnPersenItem\": 11,\n  \"pphPersenItem\": 2\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1734,11 +1746,11 @@
                 "projects"
               ]
             },
-            "description": "Buat proyek baru dengan semua field termasuk field opsional.\n\n**Permission dibutuhkan:** `projects` → `write`\n\n**Field wajib:** judulProyek, kategori, deskripsi, namaClient, kontak, instansi, prioritas, assignedToUserId, deadline, tipePembayaran, items\n\n**Field opsional:** nomorPO, catatan, ppnPersen, ppnNominal, pphPersen, pphNominal, biayaLainnya, marketingExternal\n\n**Catatan:** `totalNilai` dihitung **otomatis** dari `items` (quantity × hargaSatuan) — tidak perlu dikirim.\n\n**Tipe biaya lainnya:** `e_materai` | `materai` | `e_sign` | `biaya_admin` | `lainnya`\n\n**Tipe fee marketer:** `persentase` | `nominal`"
+            "description": "Buat proyek baru dengan semua field termasuk field opsional.\n\n**Permission dibutuhkan:** `projects` → `write`\n\n**Field wajib:** judulProyek, kategori, deskripsi, namaClient, kontak, instansi, prioritas, assignedToUserId, deadline, tipePembayaran, items\n\n**Field opsional:** nomorPO, catatan, ppnPersen, ppnNominal, pphPersen, pphNominal, biayaLainnya, marketingExternal\n\n**Catatan:** `totalNilai` dihitung **otomatis** dari `items` (quantity × hargaSatuan) — tidak perlu dikirim.\n\n**Tipe biaya lainnya:** `e_materai` | `materai` | `e_sign` | `biaya_admin` | `lainnya`\n\n**Tipe fee marketer:** `persentase` | `nominal`\n\n### Breakdown Pajak per Item (flag di level Project)\n`sudahTermasukPajak`, `ppnPersenItem`, `pphPersenItem` dikirim di level project (bukan di tiap item). Berlaku untuk **semua** item.\n\nJika `sudahTermasukPajak = true`, sistem otomatis menghitung per item:\n- `dpp` = hargaSatuan / (1 + ppnPersenItem/100)\n- `ppnNominalItem` = dpp × ppnPersenItem/100\n- `pphNominalItem` = dpp × pphPersenItem/100\n- `subtotalDpp`, `subtotalPpn`, `subtotalPph` = nilai di atas × quantity\n\n**Contoh:** hargaSatuan 27.750.000 (include PPN 11%) → DPP = 25.000.000, PPN = 2.750.000"
           },
           "response": [
             {
-              "name": "201 — Proyek berhasil dibuat",
+              "name": "201 — Proyek berhasil dibuat (dengan breakdown pajak per item)",
               "originalRequest": {
                 "method": "POST",
                 "header": [
@@ -1749,7 +1761,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n  \"kategori\": \"Software Development\",\n  \"deskripsi\": \"Pengembangan website e-commerce\",\n  \"namaClient\": \"Pak Hendra Wijaya\",\n  \"kontak\": \"08123456789\",\n  \"instansi\": \"PT. Maju Jaya\",\n  \"prioritas\": \"tinggi\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"termin\",\n  \"items\": [{\"namaItem\": \"Jasa Website\", \"quantity\": 1, \"satuan\": \"paket\", \"hargaSatuan\": 25000000}]\n}"
+                  "raw": "{\n  \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n  \"kategori\": \"Software Development\",\n  \"deskripsi\": \"Pengembangan website e-commerce\",\n  \"namaClient\": \"Pak Hendra Wijaya\",\n  \"kontak\": \"08123456789\",\n  \"instansi\": \"PT. Maju Jaya\",\n  \"prioritas\": \"tinggi\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-12-31\",\n  \"tipePembayaran\": \"termin\",\n  \"items\": [\n    {\n      \"namaItem\": \"Jasa Pembuatan Website E-Commerce\",\n      \"quantity\": 1,\n      \"satuan\": \"paket\",\n      \"hargaSatuan\": 27750000\n    }\n  ],\n  \"sudahTermasukPajak\": true,\n  \"ppnPersenItem\": 11,\n  \"pphPersenItem\": 2\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects",
@@ -1772,7 +1784,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Proyek berhasil dibuat\",\n  \"data\": {\n    \"id\": \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\",\n    \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n    \"kategori\": \"Software Development\",\n    \"deskripsi\": \"Pengembangan website e-commerce lengkap...\",\n    \"namaClient\": \"Pak Hendra Wijaya\",\n    \"kontak\": \"08123456789\",\n    \"instansi\": \"PT. Maju Jaya\",\n    \"prioritas\": \"tinggi\",\n    \"assignedToUserId\": \"uuid-user\",\n    \"deadline\": \"2026-12-31T00:00:00.000Z\",\n    \"tipePembayaran\": \"termin\",\n    \"items\": [\n      { \"namaItem\": \"Jasa Pembuatan Website E-Commerce\", \"quantity\": 1, \"satuan\": \"paket\", \"hargaSatuan\": 25000000, \"subtotal\": 25000000 },\n      { \"namaItem\": \"Hosting & Domain (1 tahun)\", \"quantity\": 1, \"satuan\": \"tahun\", \"hargaSatuan\": 2500000, \"subtotal\": 2500000 },\n      { \"namaItem\": \"Training Penggunaan Sistem\", \"quantity\": 2, \"satuan\": \"hari\", \"hargaSatuan\": 1500000, \"subtotal\": 3000000 }\n    ],\n    \"totalNilai\": 30500000,\n    \"nomorPO\": \"PO-2026-001\",\n    \"catatan\": \"Proyek harus selesai sebelum lebaran.\",\n    \"ppnPersen\": 11,\n    \"ppnNominal\": 3300000,\n    \"pphPersen\": 2,\n    \"pphNominal\": 600000,\n    \"biayaLainnya\": [\n      { \"tipe\": \"e_materai\", \"keterangan\": null, \"nominal\": 10000 },\n      { \"tipe\": \"biaya_admin\", \"keterangan\": \"Biaya admin SIPLAH 1%\", \"nominal\": 300000 },\n      { \"tipe\": \"lainnya\", \"keterangan\": \"Biaya presentasi ke klien\", \"nominal\": 500000 }\n    ],\n    \"marketingExternal\": {\n      \"namaMarketer\": \"Budi Referral\",\n      \"kontak\": \"08987654321\",\n      \"tipeFee\": \"persentase\",\n      \"feePersentase\": 5,\n      \"feeNominal\": null,\n      \"totalNilai\": 1500000,\n      \"catatan\": \"Referral dari pameran IT Expo 2026\"\n    },\n    \"status\": \"baru\",\n    \"createdByUserId\": \"uuid-creator\",\n    \"createdAt\": \"2026-03-08T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-08T04:00:00.000Z\"\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Proyek berhasil dibuat\",\n  \"data\": {\n    \"id\": \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\",\n    \"nomorProyek\": \"PRJ-001\",\n    \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n    \"kategori\": \"Software Development\",\n    \"deskripsi\": \"Pengembangan website e-commerce lengkap...\",\n    \"namaClient\": \"Pak Hendra Wijaya\",\n    \"kontak\": \"08123456789\",\n    \"instansi\": \"PT. Maju Jaya\",\n    \"prioritas\": \"tinggi\",\n    \"assignedToUserId\": \"uuid-user\",\n    \"deadline\": \"2026-12-31T00:00:00.000Z\",\n    \"tipePembayaran\": \"termin\",\n    \"items\": [\n      {\n        \"namaItem\": \"Jasa Pembuatan Website E-Commerce\",\n        \"quantity\": 1,\n        \"satuan\": \"paket\",\n        \"hargaSatuan\": 27750000,\n        \"subtotal\": 27750000,\n        \"dpp\": 25000000,\n        \"ppnNominalItem\": 2750000,\n        \"pphNominalItem\": 500000,\n        \"subtotalDpp\": 25000000,\n        \"subtotalPpn\": 2750000,\n        \"subtotalPph\": 500000\n      },\n      {\n        \"namaItem\": \"Hosting & Domain (1 tahun)\",\n        \"quantity\": 1,\n        \"satuan\": \"tahun\",\n        \"hargaSatuan\": 2500000,\n        \"subtotal\": 2500000,\n        \"dpp\": null,\n        \"ppnNominalItem\": null,\n        \"pphNominalItem\": null,\n        \"subtotalDpp\": null,\n        \"subtotalPpn\": null,\n        \"subtotalPph\": null\n      },\n      {\n        \"namaItem\": \"Training Penggunaan Sistem\",\n        \"quantity\": 2,\n        \"satuan\": \"hari\",\n        \"hargaSatuan\": 1500000,\n        \"subtotal\": 3000000,\n        \"dpp\": null,\n        \"ppnNominalItem\": null,\n        \"pphNominalItem\": null,\n        \"subtotalDpp\": null,\n        \"subtotalPpn\": null,\n        \"subtotalPph\": null\n      }\n    ],\n    \"totalNilai\": 33250000,\n    \"nomorPO\": \"PO-2026-001\",\n    \"catatan\": \"Proyek harus selesai sebelum lebaran.\",\n    \"ppnPersen\": 11,\n    \"ppnNominal\": 3300000,\n    \"pphPersen\": 2,\n    \"pphNominal\": 600000,\n    \"biayaLainnya\": [\n      {\n        \"tipe\": \"e_materai\",\n        \"keterangan\": null,\n        \"nominal\": 10000\n      },\n      {\n        \"tipe\": \"biaya_admin\",\n        \"keterangan\": \"Biaya admin SIPLAH 1%\",\n        \"nominal\": 300000\n      },\n      {\n        \"tipe\": \"lainnya\",\n        \"keterangan\": \"Biaya presentasi ke klien\",\n        \"nominal\": 500000\n      }\n    ],\n    \"marketingExternal\": {\n      \"namaMarketer\": \"Budi Referral\",\n      \"kontak\": \"08987654321\",\n      \"tipeFee\": \"persentase\",\n      \"feePersentase\": 5,\n      \"feeNominal\": null,\n      \"totalNilai\": 1500000,\n      \"catatan\": \"Referral dari pameran IT Expo 2026\"\n    },\n    \"status\": \"baru\",\n    \"createdByUserId\": \"uuid-creator\",\n    \"createdAt\": \"2026-04-04T04:00:00.000Z\",\n    \"updatedAt\": \"2026-04-04T04:00:00.000Z\",\n    \"sudahTermasukPajak\": true,\n    \"ppnPersenItem\": 11,\n    \"pphPersenItem\": 2\n  }\n}"
             },
             {
               "name": "401 — Token tidak ada / expired",
@@ -1847,7 +1859,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"judulProyek\": \"Test\",\n  \"items\": []\n}"
+                  "raw": "{\n  \"judulProyek\": \"Test\",\n  \"items\": [],\n  \"sudahTermasukPajak\": true,\n  \"ppnPersenItem\": 11,\n  \"pphPersenItem\": 2\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects",
@@ -1887,7 +1899,13 @@
                   "pm.test('Status default baru', () => pm.expect(res.data.status).to.eql('baru'));",
                   "pm.test('nomorPO null', () => pm.expect(res.data.nomorPO).to.be.null);",
                   "pm.test('marketingExternal null', () => pm.expect(res.data.marketingExternal).to.be.null);",
-                  "pm.test('biayaLainnya kosong', () => pm.expect(res.data.biayaLainnya).to.eql([]));"
+                  "pm.test('biayaLainnya kosong', () => pm.expect(res.data.biayaLainnya).to.eql([]));",
+                  "pm.test('Semua item dpp null (tidak ada pajak)', () => {",
+                  "  res.data.items.forEach(item => {",
+                  "  pm.expect(item.dpp).to.be.null;",
+                  "    pm.expect(item.dpp).to.be.null;",
+                  "  });",
+                  "});"
                 ],
                 "type": "text/javascript"
               }
@@ -1921,7 +1939,7 @@
                 "projects"
               ]
             },
-            "description": "Buat proyek baru hanya dengan field wajib. Semua field opsional (nomorPO, catatan, ppn, pph, biayaLainnya, marketingExternal) tidak perlu dikirim.\n\n**Permission dibutuhkan:** `projects` → `write`"
+            "description": "Buat proyek baru hanya dengan field wajib. Semua field opsional (nomorPO, catatan, ppn, pph, biayaLainnya, marketingExternal) tidak perlu dikirim.\n\nKarena `sudahTermasukPajak` tidak dikirim, default = `false` dan `dpp`, `ppnNominalItem`, `pphNominalItem` akan bernilai `null`.\n\n**Permission dibutuhkan:** `projects` → `write`"
           },
           "response": []
         },
@@ -1971,6 +1989,110 @@
             "description": "Contoh proyek tipe **sewa** dengan marketer fee **nominal** (bukan persentase).\n\n**Permission dibutuhkan:** `projects` → `write`"
           },
           "response": []
+        },
+        {
+          "name": "4. Create Project — Item Sudah Termasuk Pajak (breakdown DPP + PPN + PPh)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('success true', () => pm.expect(res.success).to.be.true);",
+                  "",
+                  "const items = res.data.items;",
+                  "",
+                  "// Item 1: sudahTermasukPajak = true, ppn 11%, pph 2%",
+                  "// hargaSatuan 2.220.000 → DPP = 2.220.000/1.11 = 2.000.000",
+                  "const item1 = items[0];",
+                  "pm.test('Project sudahTermasukPajak = true', () => pm.expect(res.data.sudahTermasukPajak).to.be.true);",
+                  "pm.test('Item 1 dpp = 2000000', () => pm.expect(Math.round(item1.dpp)).to.eql(2000000));",
+                  "pm.test('Item 1 ppnNominalItem = 220000', () => pm.expect(Math.round(item1.ppnNominalItem)).to.eql(220000));",
+                  "pm.test('Item 1 pphNominalItem = 40000', () => pm.expect(Math.round(item1.pphNominalItem)).to.eql(40000));",
+                  "pm.test('Item 1 subtotalDpp (qty 3) = 6000000', () => pm.expect(Math.round(item1.subtotalDpp)).to.eql(6000000));",
+                  "pm.test('Item 1 subtotalPpn (qty 3) = 660000', () => pm.expect(Math.round(item1.subtotalPpn)).to.eql(660000));",
+                  "pm.test('Item 1 subtotalPph (qty 3) = 120000', () => pm.expect(Math.round(item1.subtotalPph)).to.eql(120000));",
+                  "",
+                  "// Item 2: sudahTermasukPajak = false → semua null",
+                  "const item2 = items[1];",
+                  "pm.test('Item 2 dpp = null (karena tidak ada ppnPersenItem)', () => pm.expect(item2.dpp).to.be.null);",
+                  "pm.test('Item 2 dpp = null', () => pm.expect(item2.dpp).to.be.null);",
+                  "console.log('✅ Breakdown Item 1 → DPP:', item1.dpp, '| PPN:', item1.ppnNominalItem, '| PPh:', item1.pphNominalItem);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judulProyek\": \"Pengadaan Laptop Karyawan PT. Karya Mandiri\",\n  \"kategori\": \"Pengadaan\",\n  \"deskripsi\": \"Pengadaan laptop untuk kebutuhan operasional karyawan baru — harga sudah include PPN 11% dan PPh 2%\",\n  \"namaClient\": \"Pak Arif Budiman\",\n  \"kontak\": \"082134567890\",\n  \"instansi\": \"PT. Karya Mandiri\",\n  \"prioritas\": \"sedang\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-06-30\",\n  \"tipePembayaran\": \"reguler\",\n  \"items\": [\n    {\n      \"namaItem\": \"Laptop Dell Latitude 5540\",\n      \"quantity\": 3,\n      \"satuan\": \"unit\",\n      \"hargaSatuan\": 2220000\n    },\n    {\n      \"namaItem\": \"Mouse & Keyboard Wireless\",\n      \"quantity\": 3,\n      \"satuan\": \"set\",\n      \"hargaSatuan\": 350000\n    }\n  ],\n  \"sudahTermasukPajak\": true,\n  \"ppnPersenItem\": 11,\n  \"pphPersenItem\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ]
+            },
+            "description": "Contoh penggunaan fitur breakdown pajak per item.\n\n### Cara Kerja\nKetika `sudahTermasukPajak = true`, sistem menghitung:\n- **DPP** = `hargaSatuan / (1 + ppnPersenItem/100)`\n- **ppnNominalItem** = `dpp × ppnPersenItem/100`\n- **pphNominalItem** = `dpp × pphPersenItem/100`\n- **subtotalDpp/Ppn/Pph** = nilai di atas × quantity\n\n### Contoh Item 1\n- hargaSatuan: **Rp 2.220.000** (sudah include PPN 11%)\n- DPP = 2.220.000 / 1.11 = **Rp 2.000.000**\n- PPN = 2.000.000 × 11% = **Rp 220.000**\n- PPh = 2.000.000 × 2% = **Rp 40.000**\n- subtotalDpp (qty 3) = **Rp 6.000.000**\n\n### Item tanpa pajak\nJika `sudahTermasukPajak = false` atau tidak diisi, `dpp`, `ppnNominalItem`, `pphNominalItem` akan bernilai `null`."
+          },
+          "response": [
+            {
+              "name": "201 — Breakdown pajak per item berhasil dihitung",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"judulProyek\": \"Pengadaan Laptop Karyawan PT. Karya Mandiri\",\n  \"kategori\": \"Pengadaan\",\n  \"deskripsi\": \"Pengadaan laptop — harga sudah include PPN 11% dan PPh 2%\",\n  \"namaClient\": \"Pak Arif Budiman\",\n  \"kontak\": \"082134567890\",\n  \"instansi\": \"PT. Karya Mandiri\",\n  \"prioritas\": \"sedang\",\n  \"assignedToUserId\": \"{{user_id}}\",\n  \"deadline\": \"2026-06-30\",\n  \"tipePembayaran\": \"reguler\",\n  \"items\": [\n    {\n      \"namaItem\": \"Laptop Dell Latitude 5540\",\n      \"quantity\": 3,\n      \"satuan\": \"unit\",\n      \"hargaSatuan\": 2220000\n    },\n    {\n      \"namaItem\": \"Mouse & Keyboard Wireless\",\n      \"quantity\": 3,\n      \"satuan\": \"set\",\n      \"hargaSatuan\": 350000\n    }\n  ],\n  \"sudahTermasukPajak\": true,\n  \"ppnPersenItem\": 11,\n  \"pphPersenItem\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/projects",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Proyek berhasil dibuat\",\n  \"data\": {\n    \"id\": \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\",\n    \"nomorProyek\": \"PRJ-002\",\n    \"judulProyek\": \"Pengadaan Laptop Karyawan PT. Karya Mandiri\",\n    \"kategori\": \"Pengadaan\",\n    \"deskripsi\": \"Pengadaan laptop untuk kebutuhan operasional karyawan baru\",\n    \"namaClient\": \"Pak Arif Budiman\",\n    \"kontak\": \"082134567890\",\n    \"instansi\": \"PT. Karya Mandiri\",\n    \"prioritas\": \"sedang\",\n    \"assignedToUserId\": \"uuid-user\",\n    \"deadline\": \"2026-06-30T00:00:00.000Z\",\n    \"tipePembayaran\": \"reguler\",\n    \"items\": [\n      {\n        \"namaItem\": \"Laptop Dell Latitude 5540\",\n        \"quantity\": 3,\n        \"satuan\": \"unit\",\n        \"hargaSatuan\": 2220000,\n        \"subtotal\": 6660000,\n        \"dpp\": 2000000,\n        \"ppnNominalItem\": 220000,\n        \"pphNominalItem\": 40000,\n        \"subtotalDpp\": 6000000,\n        \"subtotalPpn\": 660000,\n        \"subtotalPph\": 120000\n      },\n      {\n        \"namaItem\": \"Mouse & Keyboard Wireless\",\n        \"quantity\": 3,\n        \"satuan\": \"set\",\n        \"hargaSatuan\": 350000,\n        \"subtotal\": 1050000,\n        \"dpp\": null,\n        \"ppnNominalItem\": null,\n        \"pphNominalItem\": null,\n        \"subtotalDpp\": null,\n        \"subtotalPpn\": null,\n        \"subtotalPph\": null\n      }\n    ],\n    \"totalNilai\": 7710000,\n    \"nomorPO\": null,\n    \"catatan\": null,\n    \"ppnPersen\": null,\n    \"ppnNominal\": null,\n    \"pphPersen\": null,\n    \"pphNominal\": null,\n    \"biayaLainnya\": [],\n    \"marketingExternal\": null,\n    \"status\": \"baru\",\n    \"createdByUserId\": \"uuid-creator\",\n    \"createdAt\": \"2026-04-04T04:00:00.000Z\",\n    \"updatedAt\": \"2026-04-04T04:00:00.000Z\",\n    \"sudahTermasukPajak\": true,\n    \"ppnPersenItem\": 11,\n    \"pphPersenItem\": 2\n  }\n}"
+            }
+          ]
         },
         {
           "name": "❌ Create Project — 401 Tanpa Token",
@@ -2123,15 +2245,35 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects?page=1&limit=10",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "v1", "projects"],
-                  "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "10"}]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
                 }
               },
               "status": "OK",
               "code": 200,
               "_postman_previewlanguage": "json",
-              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Daftar proyek berhasil diambil\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"uuid-1\",\n        \"nomorProyek\": \"PRJ-001\",\n        \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n        \"kategori\": \"Software Development\",\n        \"deskripsiSingkat\": \"Pengembangan website e-commerce lengkap dengan sistem pembayaran...\",\n        \"namaClient\": \"Pak Hendra Wijaya\",\n        \"instansi\": \"PT. Maju Jaya\",\n        \"status\": \"baru\",\n        \"prioritas\": \"tinggi\",\n        \"tipePembayaran\": \"termin\",\n        \"deadline\": \"2026-12-31\",\n        \"deadlineStatus\": \"normal\",\n        \"sisaHari\": 298,\n        \"totalNilai\": 30500000,\n        \"createdAt\": \"2026-03-08T04:00:00.000Z\"\n      }\n    ],\n    \"total\": 1,\n    \"page\": 1,\n    \"limit\": 10,\n    \"totalPages\": 1,\n    \"summary\": {\n      \"total\": 1,\n      \"baru\": 1,\n      \"proses\": 0,\n      \"pending\": 0,\n      \"selesai\": 0,\n      \"dibayar\": 0,\n      \"dibatalkan\": 0\n    }\n  }\n}"
             }
           ]
@@ -2158,12 +2300,27 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/projects?page=1&limit=10&status=baru",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "projects"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ],
               "query": [
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "10"},
-                {"key": "status", "value": "baru"}
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "baru"
+                }
               ]
             },
             "description": "Filter proyek dengan status **baru**.\n\nGanti value `status` dengan: `baru` | `proses` | `pending` | `selesai` | `dibayar` | `dibatalkan`"
@@ -2192,12 +2349,27 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/projects?page=1&limit=10&tipePembayaran=termin",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "projects"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ],
               "query": [
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "10"},
-                {"key": "tipePembayaran", "value": "termin"}
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "tipePembayaran",
+                  "value": "termin"
+                }
               ]
             },
             "description": "Filter tab **Termin** di UI.\n\nGanti `tipePembayaran` dengan: `reguler` | `termin` | `sewa`"
@@ -2222,12 +2394,27 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/projects?page=1&limit=10&search=maju",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "projects"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects"
+              ],
               "query": [
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "10"},
-                {"key": "search", "value": "maju"}
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "maju"
+                }
               ]
             },
             "description": "Cari proyek berdasarkan judul, nama client, atau instansi (ILIKE / case-insensitive)."
@@ -2258,8 +2445,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "projects", "{{project_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects",
+                "{{project_id}}"
+              ]
             },
             "description": "Ambil detail lengkap proyek berdasarkan UUID.\n\n**Permission dibutuhkan:** `projects` → `read`\n\n**Response:** Full `ProjectResponseDto` — termasuk semua items, biayaLainnya, marketingExternal, ppn, pph."
           },
@@ -2271,14 +2465,26 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "v1", "projects", "{{project_id}}"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects",
+                    "{{project_id}}"
+                  ]
                 }
               },
               "status": "OK",
               "code": 200,
               "_postman_previewlanguage": "json",
-              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Detail proyek berhasil diambil\",\n  \"data\": {\n    \"id\": \"uuid-1\",\n    \"nomorProyek\": \"PRJ-001\",\n    \"judulProyek\": \"Website E-Commerce PT. Maju Jaya\",\n    \"kategori\": \"Software Development\",\n    \"deskripsi\": \"Pengembangan website e-commerce lengkap...\",\n    \"namaClient\": \"Pak Hendra Wijaya\",\n    \"kontak\": \"08123456789\",\n    \"instansi\": \"PT. Maju Jaya\",\n    \"prioritas\": \"tinggi\",\n    \"assignedToUserId\": \"uuid-user\",\n    \"deadline\": \"2026-12-31T00:00:00.000Z\",\n    \"tipePembayaran\": \"termin\",\n    \"items\": [\n      {\"namaItem\": \"Jasa Website\", \"quantity\": 1, \"satuan\": \"paket\", \"hargaSatuan\": 25000000, \"subtotal\": 25000000}\n    ],\n    \"totalNilai\": 30500000,\n    \"nomorPO\": \"PO-2026-001\",\n    \"catatan\": \"Proyek harus selesai sebelum lebaran.\",\n    \"ppnPersen\": 11,\n    \"ppnNominal\": 3300000,\n    \"pphPersen\": 2,\n    \"pphNominal\": 600000,\n    \"biayaLainnya\": [{\"tipe\": \"e_materai\", \"keterangan\": null, \"nominal\": 10000}],\n    \"marketingExternal\": {\"namaMarketer\": \"Budi\", \"kontak\": \"089...\", \"tipeFee\": \"persentase\", \"feePersentase\": 5, \"feeNominal\": null, \"totalNilai\": 1500000, \"catatan\": null},\n    \"status\": \"baru\",\n    \"createdByUserId\": \"uuid-creator\",\n    \"createdAt\": \"2026-03-08T04:00:00.000Z\",\n    \"updatedAt\": \"2026-03-08T04:00:00.000Z\"\n  }\n}"
             },
             {
@@ -2288,14 +2494,26 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects/00000000-0000-4000-8000-000000000000",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "v1", "projects", "00000000-0000-4000-8000-000000000000"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects",
+                    "00000000-0000-4000-8000-000000000000"
+                  ]
                 }
               },
               "status": "Not Found",
               "code": 404,
               "_postman_previewlanguage": "json",
-              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 404,\n  \"message\": \"Proyek dengan id \\\"00000000-0000-4000-8000-000000000000\\\" tidak ditemukan\"\n}"
             }
           ]
@@ -2321,8 +2539,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "projects", "{{project_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "projects",
+                "{{project_id}}"
+              ]
             },
             "description": "Hapus proyek secara permanen berdasarkan UUID.\n\n**Permission dibutuhkan:** `projects` → `delete`\n\n**⚠️ Peringatan:** Aksi ini tidak bisa dibatalkan. Pastikan project_id sudah benar sebelum menjalankan."
           },
@@ -2334,14 +2559,26 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "v1", "projects", "{{project_id}}"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects",
+                    "{{project_id}}"
+                  ]
                 }
               },
               "status": "OK",
               "code": 200,
               "_postman_previewlanguage": "json",
-              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Proyek berhasil dihapus\",\n  \"data\": {\n    \"message\": \"Proyek \\\"Website E-Commerce PT. Maju Jaya\\\" berhasil dihapus\"\n  }\n}"
             },
             {
@@ -2351,14 +2588,26 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects/00000000-0000-4000-8000-000000000000",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "v1", "projects", "00000000-0000-4000-8000-000000000000"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects",
+                    "00000000-0000-4000-8000-000000000000"
+                  ]
                 }
               },
               "status": "Not Found",
               "code": 404,
               "_postman_previewlanguage": "json",
-              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 404,\n  \"message\": \"Proyek dengan ID \\\"00000000-0000-4000-8000-000000000000\\\" tidak ditemukan\"\n}"
             },
             {
@@ -2368,14 +2617,26 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/v1/projects/{{project_id}}",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "v1", "projects", "{{project_id}}"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "projects",
+                    "{{project_id}}"
+                  ]
                 }
               },
               "status": "Forbidden",
               "code": 403,
               "_postman_previewlanguage": "json",
-              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
               "body": "{\n  \"success\": false,\n  \"statusCode\": 403,\n  \"message\": \"Akses ditolak. Role \\\"Viewer\\\" tidak memiliki izin \\\"delete\\\" pada fitur \\\"projects\\\".\"\n}"
             }
           ]

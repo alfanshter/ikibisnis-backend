@@ -47,6 +47,14 @@ export class Project {
   pphPersen: number | null;
   pphNominal: number | null;
 
+  // ── Pajak Termasuk dalam Harga Item ──────────────────────────────────────
+  /** Apakah semua harga item sudah include PPN & PPh */
+  sudahTermasukPajak: boolean;
+  /** Rate PPN (%) untuk breakdown pajak per item */
+  ppnPersenItem: number | null;
+  /** Rate PPh (%) untuk breakdown pajak per item */
+  pphPersenItem: number | null;
+
   // ── Other Costs ───────────────────────────────────────────────────────────
   biayaLainnya: OtherCost[];
 
@@ -81,6 +89,9 @@ export class Project {
     ppnNominal?: number | null;
     pphPersen?: number | null;
     pphNominal?: number | null;
+    sudahTermasukPajak?: boolean;
+    ppnPersenItem?: number | null;
+    pphPersenItem?: number | null;
     biayaLainnya?: OtherCost[];
     marketingExternal?: ExternalMarketer | null;
     status?: ProjectStatus;
@@ -108,6 +119,9 @@ export class Project {
     this.ppnNominal = props.ppnNominal ?? null;
     this.pphPersen = props.pphPersen ?? null;
     this.pphNominal = props.pphNominal ?? null;
+    this.sudahTermasukPajak = props.sudahTermasukPajak ?? false;
+    this.ppnPersenItem = props.ppnPersenItem ?? null;
+    this.pphPersenItem = props.pphPersenItem ?? null;
     this.biayaLainnya = props.biayaLainnya ?? [];
     this.marketingExternal = props.marketingExternal ?? null;
     this.status = props.status ?? ProjectStatus.BARU;
